@@ -18,6 +18,8 @@ import DietTracker from "./DietTracker";
 import ProgressTracker from "./ProgressTracker";
 import TimeScreen from "./TimeScreen";
 import { createStackNavigator } from "@react-navigation/stack";
+import timer from "../assets/timer-icon-11.png";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 export default function SplashScreen() {
   const Stack = createStackNavigator();
@@ -106,12 +108,35 @@ export default function SplashScreen() {
         }}
       >
         <NavigationContainer>
-          <Tab.Navigator>
+          <Tab.Navigator
+            screenOptions={({ route }) => ({
+              tabBarIcon: ({ focused, color, size }) => {
+                let iconName;
+
+                if (route.name === "Home") {
+                  iconName = "md-home";
+                } else if (route.name === "Time") {
+                  iconName = "ios-timer";
+                } else if (route.name === "Planner") {
+                  iconName = "calendar";
+                } else if (route.name === "Diet") {
+                  iconName = "nutrition";
+                } else if (route.name === "Progress") {
+                  iconName = "checkmark-done-circle-sharp";
+                }
+
+                // You can return any component that you like here!
+                return <Ionicons name={iconName} size={size} color={color} />;
+              },
+              tabBarActiveTintColor: "#CC0000",
+              tabBarInactiveTintColor: "gray",
+            })}
+          >
             <Tab.Screen name="Planner" component={Planner} />
             <Tab.Screen name="Time" component={TimeScreen} />
             <Tab.Screen name="Home" component={HomeScreen} />
-            <Tab.Screen name="Diet Tracker" component={DietTracker} />
-            <Tab.Screen name="Progress Tracker" component={ProgressTracker} />
+            <Tab.Screen name="Diet" component={DietTracker} />
+            <Tab.Screen name="Progress" component={ProgressTracker} />
           </Tab.Navigator>
         </NavigationContainer>
       </Animated.View>
