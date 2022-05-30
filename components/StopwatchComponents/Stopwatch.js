@@ -1,9 +1,9 @@
 import React, { useCallback, useState, useRef } from "react";
 import { StyleSheet, Text, View, SafeAreaView, Platform } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import Laps from "../components/StopwatchComponents/Laps";
-import Control from "../components/StopwatchComponents/Control";
-import { displayTime } from "../components/StopwatchComponents/timer";
+import Laps from "./Laps";
+import Control from "./Control";
+import { displayTime } from "./timer";
 
 function Stopwatch() {
   const [time, setTime] = useState(0);

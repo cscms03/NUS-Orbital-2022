@@ -1,12 +1,14 @@
 import * as React from "react";
 import { Text, View, StyleSheet } from "react-native";
-import SplashScreen from "./Screens/SplashScreen";
+import MainScreen from "./Screens/MainScreen";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import Timer from "./components/StopwatchComponents/CountdownTimer";
+import TimeScreen from "./Screens/TimeScreen";
 
 export default function App() {
   return (
     <SafeAreaProvider>
-      <SplashScreen />
+      <MainScreen />
     </SafeAreaProvider>
   );
 }

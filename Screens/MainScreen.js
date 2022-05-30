@@ -9,15 +9,18 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Logo from "../assets/logo.png";
-import Stopwatch from "./Stopwatch";
+import Stopwatch from "../components/StopwatchComponents/Stopwatch";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import HomeScreen from "../Screens/HomeScreen";
-import Planner from "../Screens/Planner";
-import DietTracker from "../Screens/DietTracker";
-import ProgressTracker from "../Screens/ProgressTracker";
+import HomeScreen from "./HomeScreen";
+import Planner from "./Planner";
+import DietTracker from "./DietTracker";
+import ProgressTracker from "./ProgressTracker";
+import TimeScreen from "./TimeScreen";
+import { createStackNavigator } from "@react-navigation/stack";
 
 export default function SplashScreen() {
+  const Stack = createStackNavigator();
   const Tab = createBottomTabNavigator();
 
   //SafeArea value
@@ -105,7 +108,7 @@ export default function SplashScreen() {
         <NavigationContainer>
           <Tab.Navigator>
             <Tab.Screen name="Planner" component={Planner} />
-            <Tab.Screen name="Timer" component={Stopwatch} />
+            <Tab.Screen name="Time" component={TimeScreen} />
             <Tab.Screen name="Home" component={HomeScreen} />
             <Tab.Screen name="Diet Tracker" component={DietTracker} />
             <Tab.Screen name="Progress Tracker" component={ProgressTracker} />
