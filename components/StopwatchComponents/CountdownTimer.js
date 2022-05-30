@@ -219,7 +219,7 @@ export default function Timer() {
 
             const scale = scroll.interpolate({
               inputRange,
-              outputRange: [0.7, 1, 0.7],
+              outputRange: [0.7, 1.3, 0.7],
             });
             return (
               <Animated.View
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#CC0000",
   },
   text: {
-    fontSize: ITEM_SIZE * 0.55,
+    fontSize: ITEM_SIZE * 0.45,
     fontWeight: "500",
   },
 });
