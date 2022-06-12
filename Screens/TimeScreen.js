@@ -1,4 +1,5 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { StatusBar } from "react-native";
 import Timer from "../components/StopwatchComponents/CountdownTimer";
 import Stopwatch from "../components/StopwatchComponents/Stopwatch";
 import { NavigationContainer } from "@react-navigation/native";
