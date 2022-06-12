@@ -26,24 +26,14 @@ function StartScreen({ navigation }) {
         duration={1500}
         style={styles.footer}
       >
-        <Text style={styles.title}>Welcome!</Text>
+        <Text style={styles.title}>Welcome to Workout Ethic!</Text>
         <View style={styles.button}>
           <TouchableOpacity onPress={() => navigation.navigate("SigninScreen")}>
             <LinearGradient
               colors={["#CC0000", "#ff8080"]}
               style={styles.signIn}
             >
-              <Text style={styles.textSign}>Sign In</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.button}>
-          <TouchableOpacity onPress={() => navigation.navigate("SignUpScreen")}>
-            <LinearGradient
-              colors={["#808080", "#b3b3b3"]}
-              style={styles.signIn}
-            >
-              <Text style={styles.textSign}>Sign Up</Text>
+              <Text style={styles.textSign}>Get Started!</Text>
             </LinearGradient>
           </TouchableOpacity>
         </View>
@@ -69,7 +59,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     flex: 2 / 5,
-    backgroundColor: "#fff",
+    backgroundColor: "#f9fbfc",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingVertical: 50,
@@ -80,8 +70,8 @@ const styles = StyleSheet.create({
     height: height_logo,
   },
   title: {
-    color: "black",
-    fontSize: 30,
+    color: "#b30000",
+    fontSize: 35,
     fontWeight: "bold",
   },
   text: {
@@ -89,8 +79,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   button: {
-    alignItems: "center",
-    marginTop: 40,
+    alignItems: "flex-end",
+    marginTop: 100,
   },
   signIn: {
     width: 250,

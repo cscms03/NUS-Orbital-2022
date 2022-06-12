@@ -6,6 +6,8 @@ import StartScreen from "../StartScreen";
 import SignInScreen from "../SignInScreen";
 import MainScreen from "../MainScreen";
 import SignUpScreen from "../SignUpScreen";
+import ConfirmEmail from "./ConfirmEmail";
+import ResetPassword from "./ResetPassword";
 
 const Stack = createStackNavigator();
 
@@ -31,6 +33,16 @@ function RootStack() {
         <Stack.Screen
           name="SignUpScreen"
           component={SignUpScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ConfirmEmail"
+          component={ConfirmEmail}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ResetPassword"
+          component={ResetPassword}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

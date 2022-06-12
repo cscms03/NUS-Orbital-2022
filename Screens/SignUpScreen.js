@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import {
   Text,
   View,
@@ -10,10 +10,34 @@ import {
 import logo from "../assets/logo_red.png";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Animatable from "react-native-animatable";
-import { TextInput } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
 import userIcon from "../assets/userIcon.png";
+import SolidButton from "../components/Authentication/SolidButton";
+import CustomInput from "../components/Authentication/CustomInput";
+import TextButton from "../components/Authentication/TextButton";
+import { Controller, useForm } from "react-hook-form";
+
+const EMAIL_REGEX =
+  /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 function SignUpScreen({ navigation }) {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm();
+
+  const pwd = watch("password");
+
+  const handleGetStartedPress = (data) => {
+    navigation.navigate("ConfirmEmail");
+  };
+
+  const handleGoBackSignInPress = () => {
+    navigation.navigate("SigninScreen");
+  };
+
   return (
     <View style={styles.container}>
       <Animatable.View style={styles.header} animation="fadeInLeft">
@@ -25,55 +49,80 @@ function SignUpScreen({ navigation }) {
       </Animatable.View>
       <Animatable.View
         animation="fadeInUp"
-        duration={1500}
+        duration={700}
         style={styles.footer}
       >
-        <Text style={styles.title}>Welcome!</Text>
-        <View style={{ paddingTop: 20 }}>
-          <Text style={styles.text}>Email:</Text>
-        </View>
-        <View>
-          <TextInput
-            style={styles.input}
-            placeholder="Your Email"
-            placeholderTextColor={"#e9c9c9"}
-          ></TextInput>
-        </View>
+        <ScrollView>
+          <Text style={styles.title}>Create your account!</Text>
 
-        <View style={{ paddingTop: 20 }}>
-          <Text style={styles.text}>Password:</Text>
-        </View>
-        <View>
-          <TextInput
-            style={styles.input}
-            placeholder="Your Password"
-            placeholderTextColor={"#e9c9c9"}
+          <CustomInput
+            name="username"
+            placeholder="Username"
+            control={control}
+            secureTextEntry={false}
+            rules={{
+              required: "Username is required",
+              minLength: {
+                value: 3,
+                message: "Minimum length of username is 3 characters long",
+              },
+              maxLength: {
+                value: 24,
+                message: "Maximum length of username is 24 characters long",
+              },
+            }}
+          />
+          <CustomInput
+            name="Email"
+            placeholder="Email"
+            control={control}
+            secureTextEntry={false}
+            rules={{
+              required: "Email is required",
+              pattern: { value: EMAIL_REGEX, message: "Email is invalid" },
+            }}
+          />
+
+          <CustomInput
+            name="password"
+            placeholder="Password"
             secureTextEntry={true}
-          ></TextInput>
-        </View>
+            control={control}
+            rules={{
+              required: "Password is required",
+              minLength: {
+                value: 8,
+                message: "Password should be minimum 8 characters long",
+              },
+            }}
+          />
 
-        <View style={{ paddingTop: 20 }}>
-          <Text style={styles.text}>Confirm Password:</Text>
-        </View>
-        <View>
-          <TextInput
-            style={styles.input}
-            placeholder="Confirm your password"
-            placeholderTextColor={"#e9c9c9"}
+          <CustomInput
+            name="Confirm-password"
+            placeholder="Confirm Password"
             secureTextEntry={true}
-          ></TextInput>
-        </View>
+            control={control}
+            rules={{
+              validate: (value) =>
+                value === pwd || "The password does not match",
+            }}
+          />
 
-        <View style={styles.button}>
-          <TouchableOpacity onPress={() => navigation.navigate("MainScreen")}>
-            <LinearGradient
-              colors={["#CC0000", "#800000"]}
-              style={styles.signIn}
-            >
-              <Text style={styles.textSign}>Get Started!</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
+          <SolidButton
+            onPress={handleSubmit(handleGetStartedPress)}
+            text="Confirm Email"
+            colors={["#CC0000", "#800000"]}
+            alignment="flex-end"
+          />
+
+          <TextButton
+            text="Have an account?"
+            buttonText="Sign in"
+            alignment="center"
+            marginTop={20}
+            onPress={handleGoBackSignInPress}
+          />
+        </ScrollView>
       </Animatable.View>
     </View>
   );
@@ -97,7 +146,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     flex: 5,
-    backgroundColor: "#fff",
+    backgroundColor: "#f9fbfc",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingVertical: 20,
@@ -105,8 +154,9 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "#b30000",
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: "bold",
+    marginBottom: 15,
   },
   text: {
     color: "#990000",

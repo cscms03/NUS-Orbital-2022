@@ -5,40 +5,34 @@ import {
   StyleSheet,
   Dimensions,
   Image,
-  Pressable,
   TouchableOpacity,
 } from "react-native";
-import logo from "../assets/logo_red.png";
+
 import { LinearGradient } from "expo-linear-gradient";
 import * as Animatable from "react-native-animatable";
-import CustomInput from "../components/Authentication/CustomInput";
-import SolidButton from "../components/Authentication/SolidButton";
-import TextButton from "../components/Authentication/TextButton";
-import { useForm, Controller } from "react-hook-form";
 import { TextInput } from "react-native-gesture-handler";
+import SolidButton from "../../components/Authentication/SolidButton";
+import CustomInput from "../../components/Authentication/CustomInput";
+import TextButton from "../../components/Authentication/TextButton";
+import { useForm } from "react-hook-form";
 
-function SignInScreen({ navigation }) {
+function ResetPassword({ navigation }) {
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const handleCreateAccountPress = () => {
-    navigation.navigate("SignUpScreen");
+  const handleResetPasswordPress = (data) => {
+    navigation.navigate("SigninScreen");
   };
-
-  const handleResetPasswordPress = () => {
-    navigation.navigate("ResetPassword");
-  };
-
-  const handleSignInPress = (data) => {
-    navigation.navigate("MainScreen");
-  };
-
   return (
     <View style={styles.container}>
-      <Animatable.View style={styles.header} animation="fadeInLeft">
+      <Animatable.View
+        style={styles.header}
+        animation="fadeInLeft"
+        duration={500}
+      >
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <LinearGradient style={styles.goBack} colors={["#fff", "#d9d9d9"]}>
             <Text style={styles.textGoBack}> Go Back</Text>
@@ -47,10 +41,10 @@ function SignInScreen({ navigation }) {
       </Animatable.View>
       <Animatable.View
         animation="fadeInUp"
-        duration={1200}
+        duration={500}
         style={styles.footer}
       >
-        <Text style={styles.title}>Welcome!</Text>
+        <Text style={styles.title}>Reset your password</Text>
 
         <CustomInput
           name="username"
@@ -61,44 +55,45 @@ function SignInScreen({ navigation }) {
         />
 
         <CustomInput
-          name="password"
-          placeholder="Password"
+          name="new password"
+          placeholder="New password"
           secureTextEntry={true}
           control={control}
           rules={{
             required: "Password is required",
+            minLength: {
+              value: 8,
+              message: "Password should be minimum 8 characters long",
+            },
           }}
         />
 
-        <TextButton
-          text=" Forgot Password?"
-          buttonText="Reset Password"
-          alignment="flex-start"
-          onPress={handleResetPasswordPress}
-        />
-
-        <TextButton
-          text=" Don't have an account?"
-          buttonText="Create Account"
-          alignment="flex-start"
-          onPress={handleCreateAccountPress}
+        <CustomInput
+          name="Confirm new password"
+          placeholder="Confirm new Password"
+          secureTextEntry={true}
+          control={control}
+          rules={{
+            required: "Password confirmation is required",
+            minLength: {
+              value: 8,
+              message: "Password should be minimum 8 characters long",
+            },
+          }}
         />
 
         <SolidButton
-          onPress={handleSubmit(handleSignInPress)}
-          text="Sign in"
+          text="Reset password"
           colors={["#CC0000", "#800000"]}
           alignment="flex-end"
+          onPress={handleSubmit(handleResetPasswordPress)}
         />
       </Animatable.View>
     </View>
   );
 }
 
-export default SignInScreen;
-
-const { height } = Dimensions.get("screen");
-const height_logo = height * 0.15;
+export default ResetPassword;
 
 const styles = StyleSheet.create({
   container: {
@@ -121,35 +116,26 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "#b30000",
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: "bold",
     marginBottom: 15,
   },
-  text: {
-    color: "#990000",
-    marginTop: 10,
-    fontSize: 15,
-    marginLeft: 4,
-    fontWeight: "bold",
-  },
-  input: {
-    borderBottomWidth: 1,
-    borderColor: "#990000",
-    paddingVertical: 6,
-    marginLeft: 4,
-  },
+
   button: {
-    alignItems: "flex-end",
-    marginTop: 50,
-  },
-  signIn: {
-    width: 170,
-    height: 40,
+    width: "80%",
+    height: 45,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 40,
+    borderRadius: 17,
     flexDirection: "row",
   },
+
+  textButton: {
+    fontSize: 13,
+    color: "white",
+    fontWeight: "bold",
+  },
+
   goBack: {
     width: 130,
     height: 35,
@@ -159,10 +145,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginBottom: 30,
   },
-  textSign: {
-    color: "white",
-    fontWeight: "bold",
-  },
+
   textGoBack: {
     color: "#b30000",
     fontWeight: "bold",
