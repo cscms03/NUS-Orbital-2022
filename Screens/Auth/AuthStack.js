@@ -2,16 +2,16 @@ import React, { Component } from "react";
 import { StyleSheet, Dimensions, Image, Text, View } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
-import StartScreen from "../StartScreen";
-import SignInScreen from "../SignInScreen";
+import StartScreen from "./StartScreen";
+import SignInScreen from "./SignInScreen";
 import MainScreen from "../MainScreen";
-import SignUpScreen from "../SignUpScreen";
+import SignUpScreen from "./SignUpScreen";
 import ConfirmEmail from "./ConfirmEmail";
 import ResetPassword from "./ResetPassword";
 
 const Stack = createStackNavigator();
 
-function RootStack() {
+function AuthStack() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -50,4 +50,4 @@ function RootStack() {
   );
 }
 
-export default RootStack;
+export default AuthStack;

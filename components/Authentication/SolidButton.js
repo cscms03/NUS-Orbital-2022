@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
-function CustomButton({ text, colors, alignment, onPress }) {
+function SolidButton({ text, colors, alignment, onPress }) {
   return (
     <View style={[styles.container, { alignItems: alignment }]}>
       <TouchableOpacity onPress={onPress}>
@@ -14,7 +14,7 @@ function CustomButton({ text, colors, alignment, onPress }) {
   );
 }
 
-export default CustomButton;
+export default SolidButton;
 
 const styles = StyleSheet.create({
   container: {

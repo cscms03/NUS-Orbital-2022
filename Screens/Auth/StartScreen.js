@@ -7,7 +7,7 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import logo from "../assets/logo_red.png";
+import logo from "../../assets/logo_red.png";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Animatable from "react-native-animatable";
 
@@ -25,6 +25,7 @@ function StartScreen({ navigation }) {
         animation="bounceInUp"
         duration={1500}
         style={styles.footer}
+        delay={1000}
       >
         <Text style={styles.title}>Welcome to Workout Ethic!</Text>
         <View style={styles.button}>
@@ -93,5 +94,6 @@ const styles = StyleSheet.create({
   textSign: {
     color: "white",
     fontWeight: "bold",
+    fontSize: 18,
   },
 });

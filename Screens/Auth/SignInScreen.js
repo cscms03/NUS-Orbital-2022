@@ -4,25 +4,32 @@ import {
   View,
   StyleSheet,
   Dimensions,
-  Image,
-  Pressable,
+  Alert,
   TouchableOpacity,
 } from "react-native";
-import logo from "../assets/logo_red.png";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Animatable from "react-native-animatable";
-import CustomInput from "../components/Authentication/CustomInput";
-import SolidButton from "../components/Authentication/SolidButton";
-import TextButton from "../components/Authentication/TextButton";
+import CustomInput from "../../components/Authentication/CustomInput";
+import SolidButton from "../../components/Authentication/SolidButton";
+import TextButton from "../../components/Authentication/TextButton";
 import { useForm, Controller } from "react-hook-form";
-import { TextInput } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
+import { supabase } from "../../supabaseClient";
+
+const EMAIL_REGEX =
+  /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 function SignInScreen({ navigation }) {
   const {
     control,
     handleSubmit,
     formState: { errors },
+    getValues,
   } = useForm();
+
+  const [loading, setLoading] = useState(false);
+  const email = getValues("Email");
+  const password = getValues("password");
 
   const handleCreateAccountPress = () => {
     navigation.navigate("SignUpScreen");
@@ -32,8 +39,20 @@ function SignInScreen({ navigation }) {
     navigation.navigate("ResetPassword");
   };
 
-  const handleSignInPress = (data) => {
-    navigation.navigate("MainScreen");
+  const handleSignInPress = async (data) => {
+    setLoading(true);
+    try {
+      const { user, error } = await supabase.auth.signIn({
+        email: email,
+        password: password,
+      });
+
+      if (error) throw error;
+    } catch (error) {
+      Alert.alert("Welcome back!" + email);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -50,46 +69,51 @@ function SignInScreen({ navigation }) {
         duration={1200}
         style={styles.footer}
       >
-        <Text style={styles.title}>Welcome!</Text>
+        <ScrollView>
+          <Text style={styles.title}>Welcome!</Text>
 
-        <CustomInput
-          name="username"
-          placeholder="Username"
-          control={control}
-          secureTextEntry={false}
-          rules={{ required: "Username is required" }}
-        />
+          <CustomInput
+            name="Email"
+            placeholder="Email"
+            control={control}
+            secureTextEntry={false}
+            rules={{
+              required: "Email is required",
+              pattern: { value: EMAIL_REGEX, message: "Email is invalid" },
+            }}
+          />
 
-        <CustomInput
-          name="password"
-          placeholder="Password"
-          secureTextEntry={true}
-          control={control}
-          rules={{
-            required: "Password is required",
-          }}
-        />
+          <CustomInput
+            name="password"
+            placeholder="Password"
+            secureTextEntry={true}
+            control={control}
+            rules={{
+              required: "Password is required",
+            }}
+          />
 
-        <TextButton
-          text=" Forgot Password?"
-          buttonText="Reset Password"
-          alignment="flex-start"
-          onPress={handleResetPasswordPress}
-        />
+          <TextButton
+            text=" Forgot Password?"
+            buttonText="Reset Password"
+            alignment="flex-start"
+            onPress={handleResetPasswordPress}
+          />
 
-        <TextButton
-          text=" Don't have an account?"
-          buttonText="Create Account"
-          alignment="flex-start"
-          onPress={handleCreateAccountPress}
-        />
+          <TextButton
+            text=" Don't have an account?"
+            buttonText="Create Account"
+            alignment="flex-start"
+            onPress={handleCreateAccountPress}
+          />
 
-        <SolidButton
-          onPress={handleSubmit(handleSignInPress)}
-          text="Sign in"
-          colors={["#CC0000", "#800000"]}
-          alignment="flex-end"
-        />
+          <SolidButton
+            onPress={handleSubmit(handleSignInPress)}
+            text="Sign in"
+            colors={["#CC0000", "#800000"]}
+            alignment="flex-end"
+          />
+        </ScrollView>
       </Animatable.View>
     </View>
   );
