@@ -1,15 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import {
-  StyleSheet,
-  Animated,
-  Dimensions,
-  Image,
-  Text,
-  View,
-  StatusBar,
-} from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Logo from "../assets/logo.png";
+import { StyleSheet, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "./HomeScreen";
@@ -17,12 +7,9 @@ import Planner from "./Planner";
 import DietTracker from "./DietTracker";
 import ProgressTracker from "./ProgressTracker";
 import TimeScreen from "./TimeScreen";
-import { createStackNavigator } from "@react-navigation/stack";
-import timer from "../assets/timer-icon-11.png";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 export default function MainScreen() {
-  const Stack = createStackNavigator();
   const Tab = createBottomTabNavigator();
   return (
     <NavigationContainer independent={true}>

@@ -4,18 +4,17 @@ import {
   View,
   StyleSheet,
   Dimensions,
-  Image,
+  Alert,
   TouchableOpacity,
 } from "react-native";
-import logo from "../assets/logo_red.png";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Animatable from "react-native-animatable";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
-import userIcon from "../assets/userIcon.png";
-import SolidButton from "../components/Authentication/SolidButton";
-import CustomInput from "../components/Authentication/CustomInput";
-import TextButton from "../components/Authentication/TextButton";
-import { Controller, useForm } from "react-hook-form";
+import { supabase } from "../../supabaseClient";
+import SolidButton from "../../components/Authentication/SolidButton";
+import CustomInput from "../../components/Authentication/CustomInput";
+import TextButton from "../../components/Authentication/TextButton";
+import { useForm } from "react-hook-form";
 
 const EMAIL_REGEX =
   /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -26,12 +25,29 @@ function SignUpScreen({ navigation }) {
     handleSubmit,
     formState: { errors },
     watch,
+    getValues,
   } = useForm();
 
   const pwd = watch("password");
+  const [loading, setLoading] = useState(false);
+  const email = getValues("Email");
+  const password = getValues("password");
 
-  const handleGetStartedPress = (data) => {
-    navigation.navigate("ConfirmEmail");
+  const handleGetStartedPress = async (data) => {
+    try {
+      setLoading(true);
+      const { user, error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+      });
+
+      if (error) throw error;
+      alert("Check your email to confirm your account");
+    } catch (error) {
+      alert(error?.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleGoBackSignInPress = () => {
@@ -49,29 +65,12 @@ function SignUpScreen({ navigation }) {
       </Animatable.View>
       <Animatable.View
         animation="fadeInUp"
-        duration={700}
+        duration={500}
         style={styles.footer}
       >
         <ScrollView>
           <Text style={styles.title}>Create your account!</Text>
 
-          <CustomInput
-            name="username"
-            placeholder="Username"
-            control={control}
-            secureTextEntry={false}
-            rules={{
-              required: "Username is required",
-              minLength: {
-                value: 3,
-                message: "Minimum length of username is 3 characters long",
-              },
-              maxLength: {
-                value: 24,
-                message: "Maximum length of username is 24 characters long",
-              },
-            }}
-          />
           <CustomInput
             name="Email"
             placeholder="Email"
