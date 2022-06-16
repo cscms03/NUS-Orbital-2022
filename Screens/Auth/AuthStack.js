@@ -11,7 +11,7 @@ import ResetPassword from "./ResetPassword";
 
 const Stack = createStackNavigator();
 
-function RootStack() {
+function AuthStack() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -50,4 +50,4 @@ function RootStack() {
   );
 }
 
-export default RootStack;
+export default AuthStack;
