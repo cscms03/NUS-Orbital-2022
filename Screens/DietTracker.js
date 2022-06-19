@@ -1,11 +1,11 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
-import EditRoutine from "./Planner/EditRoutine";
+import EditRoutine from "./Planner/editRoutine";
 
 function DietTracker() {
   return (
     <View style={styles.container}>
-      <EditRoutine />
+      <Text style={{ fontSize: 20 }}>Diet Tracker Screen</Text>
     </View>
   );
 }
