@@ -14,7 +14,8 @@ import SolidButton from "../../components/Authentication/SolidButton";
 import TextButton from "../../components/Authentication/TextButton";
 import { useForm, Controller } from "react-hook-form";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
-import { supabase } from "../../supabaseClient";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebase";
 
 const EMAIL_REGEX =
   /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -40,19 +41,16 @@ function SignInScreen({ navigation }) {
   };
 
   const handleSignInPress = async (data) => {
-    setLoading(true);
-    try {
-      const { user, error } = await supabase.auth.signIn({
-        email: email,
-        password: password,
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log("logged in with:", user.email);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        Alert.alert(errorMessage);
       });
-
-      if (error) throw error;
-    } catch (error) {
-      Alert.alert("Welcome back!" + email);
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
