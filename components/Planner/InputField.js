@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { View, StyleSheet, TextInput, Text } from "react-native";
 import { Controller } from "react-hook-form";
 
-function CustomInput({
+function InputField({
   placeholder,
   control,
   name,
@@ -27,7 +27,7 @@ function CustomInput({
           <View
             style={[
               styles.container,
-              { borderColor: error ? "red" : "#e8e8e8" },
+              { borderColor: error ? "red" : "#4d4d4d" },
             ]}
           >
             <TextInput
@@ -37,7 +37,6 @@ function CustomInput({
               placeholder={placeholder}
               secureTextEntry={secureTextEntry}
               style={styles.input}
-              autoCapitalize="none"
             />
           </View>
         </>
@@ -46,21 +45,21 @@ function CustomInput({
   );
 }
 
-export default CustomInput;
+export default InputField;
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     width: "100%",
-    height: 47,
-    borderColor: "#e8e8e8",
-    borderWidth: 1,
-    borderRadius: 5,
+    height: 50,
+    borderWidth: 1.2,
+    borderRadius: 20,
     paddingHorizontal: 10,
     justifyContent: "center",
-    marginVertical: 7,
+    marginVertical: 12,
   },
   input: {
     alignContent: "center",
+    fontSize: 16,
   },
 });

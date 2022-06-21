@@ -68,6 +68,7 @@ function Planner() {
         // selectedDate={today}
         onDateSelected={handleOnDateSelected}
       />
+
       <View>
         <Text
           style={{
@@ -80,9 +81,11 @@ function Planner() {
           Double Click dates to view/edit your routine for other days!
         </Text>
       </View>
+
       <View style={styles.routine}>
         <Routine date={currentDate} />
       </View>
+
       <View style={{ marginVertical: -30 }}>
         <SolidButton
           colors={["#cc0000", "#990000"]}
@@ -91,12 +94,13 @@ function Planner() {
           onPress={handleEditPress}
         />
       </View>
+
       <Modal
         visible={modal}
         animationType="slide"
         presentationStyle="formSheet"
       >
-        <EditRoutine />
+        <EditRoutine date={now} />
         <View style={{ marginVertical: -30 }}>
           <SolidButton
             colors={["#cc0000", "#ff0000"]}

@@ -15,7 +15,8 @@ import CustomInput from "../../components/Authentication/CustomInput";
 import TextButton from "../../components/Authentication/TextButton";
 import { useForm } from "react-hook-form";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, app } from "../../firebase";
+import { auth, app, db } from "../../firebase";
+import { setDoc, doc } from "firebase/firestore";
 
 const EMAIL_REGEX =
   /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -40,10 +41,18 @@ function SignUpScreen({ navigation }) {
         const user = userCredential.user;
         console.log(user.email);
       })
+      .then(() => {
+        const user = auth.currentUser;
+        const uid = user.uid;
+        setDoc(doc(db, "users", uid), {
+          email: user.email,
+        });
+        console.log(db);
+      })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        Alert.alert(errorMessage);
+        Alert.alert(errorCode, errorMessage);
       });
   };
 

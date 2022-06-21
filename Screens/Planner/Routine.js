@@ -5,15 +5,19 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  FlatList,
 } from "react-native";
+import WorkoutDetails from "./WorkoutDetails";
 
 function Routine({ date }) {
   return (
-    <ScrollView style={styles.container}>
-      <Text style={{ fontSize: 17 }}>
-        Selected Date: {JSON.stringify(date)}
-      </Text>
-    </ScrollView>
+    <View style={styles.container}>
+      <FlatList
+        renderItem={(item) => {
+          <WorkoutDetails />;
+        }}
+      />
+    </View>
   );
 }
 

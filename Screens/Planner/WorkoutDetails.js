@@ -1,12 +1,21 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-function WorkoutDetails({ id, name, sets, reps, isDone }) {
+function WorkoutDetails({ name, weight, sets, reps, isDone }) {
   return (
-    <View>
+    <View style={styles.container}>
       <Text>hello</Text>
     </View>
   );
 }
 
 export default WorkoutDetails;
+
+const styles = StyleSheet.create({
+  container: {
+    width: 150,
+    height: 150,
+    flexDirection: "row",
+    backgroundColor: "#ffcccc",
+  },
+});

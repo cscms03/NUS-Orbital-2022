@@ -3,13 +3,21 @@ import { StyleSheet, View, StatusBar } from "react-native";
 import AuthStack from "./Screens/Auth/AuthStack";
 import MainScreen from "./Screens/MainScreen";
 import { auth } from "./firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function App() {
   const [session, setSession] = useState(false);
 
   useEffect(() => {
-    auth.onAuthStateChanged((user) => {
+    let isMounted = false;
+    onAuthStateChanged(auth, (user) => {
       if (user) {
+        isMounted = true;
+      } else {
+        isMounted = false;
+      }
+
+      if (isMounted) {
         setSession(true);
       } else {
         setSession(false);
