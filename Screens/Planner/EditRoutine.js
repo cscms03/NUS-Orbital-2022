@@ -15,13 +15,15 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
 import NumericInput from "react-native-numeric-input";
 import { auth, db } from "../../firebase";
-import { doc, setDoc, collection } from "firebase/firestore";
-import { error } from "webpack-dev-server/lib/utils/colors";
+import { doc, setDoc, addDoc, collection } from "firebase/firestore";
 
 function EditRoutine({ date }) {
   const user = auth.currentUser;
   const uid = user.uid;
-  const selectedDate = JSON.stringify(date);
+  const selectedDate = JSON.stringify(date)?.substring(1, 11);
+
+  const routineCol = collection(db, "users/" + uid + "/routine");
+  const userRoutineDoc = "users/" + uid;
 
   const {
     control,
@@ -31,16 +33,14 @@ function EditRoutine({ date }) {
   } = useForm();
 
   const handleAddPress = async () => {
-    console.log(name, weight, sets, uid, selectedDate);
+    console.log(name, weight, sets, uid, selectedDate, routineCol);
     try {
-      if (selectedDate === undefined) throw error;
-      await setDoc(doc(db, "users", selectedDate), {
-        id: id,
-        name: name,
-        weight: weight,
-        sets: sets,
-        reps: reps,
+      if (selectedDate === undefined) Alert.alert("Please select a date");
+      await addDoc(collection(db, userRoutineDoc, "routine"), {
+        date: selectedDate,
+        details: { name: name, weight: weight, sets: sets, reps: reps },
       });
+      Alert.alert("Plan added! Please exit");
     } catch (error) {
       console.log(error.message);
       Alert.alert(error.message);

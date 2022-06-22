@@ -1,9 +1,17 @@
 import React, { Component, useRef, useState } from "react";
-import { StyleSheet, Text, View, SafeAreaView, Modal } from "react-native";
-import CalendarStrip from "react-native-calendar-strip";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  Modal,
+  StatusBar,
+} from "react-native";
 import Routine from "./Routine";
 import SolidButton from "../../components/Authentication/SolidButton";
 import EditRoutine from "./EditRoutine";
+import CalendarStrip from "react-native-calendar-strip";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 var today = new Date();
 var dd = today.getDate();
@@ -48,24 +56,40 @@ function Planner() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View
+        style={{
+          backgroundColor: "#cc0000",
+          width: "100%",
+          height: getStatusBarHeight(),
+          position: "absolute",
+        }}
+      >
+        <StatusBar barStyle="light-content" />
+      </View>
       <CalendarStrip
         ref={ref}
         style={{
           height: 100,
-          paddingVertical: 5,
+          paddingTop: 5,
         }}
+        calendarAnimation={{ type: "sequence", duration: 10 }}
         iconContainer={{ flex: 0.1 }}
-        scrollable={true}
+        scrollable={false}
         minDate={minDate}
         maxDate={maxDate}
         daySelectionAnimation={{
           type: "background",
           duration: 200,
-          highlightColor: "#ff9999",
+          highlightColor: "#800000",
+          color: "white",
         }}
-        calendarHeaderStyle={{ fontSize: 20 }}
+        calendarColor={"#cc0000"}
+        dateNumberStyle={{ color: "white" }}
+        dateNameStyle={{ color: "white" }}
+        highlightDateNumberStyle={{ color: "white" }}
+        highlightDateNameStyle={{ color: "white" }}
+        calendarHeaderStyle={{ fontSize: 20, color: "white" }}
         scrollerPaging={true}
-        // selectedDate={today}
         onDateSelected={handleOnDateSelected}
       />
 
@@ -78,12 +102,13 @@ function Planner() {
             textAlign: "center",
           }}
         >
-          Double Click dates to view/edit your routine for other days!
+          Double-Click dates to view/edit your routine for other days! Selected
+          date: {JSON.stringify(now)?.substring(1, 11)}
         </Text>
       </View>
 
       <View style={styles.routine}>
-        <Routine date={currentDate} />
+        <Routine date={now} />
       </View>
 
       <View style={{ marginVertical: -30 }}>
@@ -120,7 +145,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   routine: {
-    flex: 0.85,
+    flex: 0.9,
+    alignItems: "center",
+    margin: 15,
   },
 });
 export default Planner;
