@@ -37,7 +37,7 @@ function Planner() {
     console.log(ref?.current?.getSelectedDate());
     return ref?.current?.getSelectedDate();
   };
-  const now = date();
+  const now = JSON.stringify(date())?.substring(1, 11);
 
   const [currentDate, setCurrentDate] = useState("");
   const [modal, setModal] = useState(false);
@@ -97,25 +97,25 @@ function Planner() {
         <Text
           style={{
             alignSelf: "center",
-            margin: 5,
-            fontSize: 17,
+            marginTop: 5,
+            fontSize: 25,
             textAlign: "center",
+            fontWeight: "bold",
           }}
         >
-          Double-Click dates to view/edit your routine for other days! Selected
-          date: {JSON.stringify(now)?.substring(1, 11)}
+          Selected date: {JSON.stringify(now)?.substring(1, 11)}
         </Text>
       </View>
 
       <View style={styles.routine}>
-        <Routine date={now} />
+        <Routine date={now} modal={modal} />
       </View>
 
-      <View style={{ marginVertical: -30 }}>
+      <View style={{ position: "absolute", top: "90%", left: "10%" }}>
         <SolidButton
           colors={["#cc0000", "#990000"]}
-          text="edit your routine!"
-          alignment="center"
+          text="Add more plans!"
+          alignment="flex-start"
           onPress={handleEditPress}
         />
       </View>

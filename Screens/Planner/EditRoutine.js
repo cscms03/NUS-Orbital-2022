@@ -8,6 +8,7 @@ import {
   TextInput,
   Keyboard,
   Alert,
+  Image,
 } from "react-native";
 import { useForm } from "react-hook-form";
 import InputField from "../../components/Planner/InputField";
@@ -15,9 +16,19 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
 import NumericInput from "react-native-numeric-input";
 import { auth, db } from "../../firebase";
-import { doc, setDoc, addDoc, collection } from "firebase/firestore";
+import { doc, setDoc, addDoc, collection, updateDoc } from "firebase/firestore";
+import update from "../../assets/update.png";
 
-function EditRoutine({ date }) {
+function EditRoutine({
+  date,
+  prevName,
+  prevWeight,
+  prevSets,
+  prevReps,
+  isUpdating = false,
+  id,
+  isDone,
+}) {
   const user = auth.currentUser;
   const uid = user.uid;
   const selectedDate = JSON.stringify(date)?.substring(1, 11);
@@ -31,6 +42,19 @@ function EditRoutine({ date }) {
     formState: { errors },
     getValues,
   } = useForm();
+  const handleUpdatePress = async () => {
+    const document = doc(db, "users/" + uid + "/routine", id);
+    await updateDoc(document, {
+      details: {
+        name,
+        weight,
+        sets,
+        reps,
+        isDone,
+      },
+    });
+    Alert.alert("Plan updated! Please exit");
+  };
 
   const handleAddPress = async () => {
     console.log(name, weight, sets, uid, selectedDate, routineCol);
@@ -38,7 +62,13 @@ function EditRoutine({ date }) {
       if (selectedDate === undefined) Alert.alert("Please select a date");
       await addDoc(collection(db, userRoutineDoc, "routine"), {
         date: selectedDate,
-        details: { name: name, weight: weight, sets: sets, reps: reps },
+        details: {
+          name: name,
+          weight: weight,
+          sets: sets,
+          reps: reps,
+          isDone: false,
+        },
       });
       Alert.alert("Plan added! Please exit");
     } catch (error) {
@@ -50,7 +80,7 @@ function EditRoutine({ date }) {
   const [weight, setWeight] = useState("");
   const [sets, setSets] = useState(0);
   const [reps, setReps] = useState(0);
-  const [id, setId] = useState(0); //have unique id for each workout component
+  // const [id, setId] = useState(0); //have unique id for each workout component
 
   const name = getValues("Workout-Name");
 
@@ -64,6 +94,7 @@ function EditRoutine({ date }) {
             placeholder="Workout Name"
             control={control}
             secureTextEntry={false}
+            defaultValue={prevName}
             rules={{
               required: "Workout name is a required field",
             }}
@@ -83,6 +114,7 @@ function EditRoutine({ date }) {
               <TextInput
                 style={styles.weightInput}
                 value={weight}
+                defaultValue={prevWeight || ""}
                 onChangeText={(num) => setWeight(num)}
                 keyboardType="numeric"
                 maxLength={3}
@@ -104,6 +136,7 @@ function EditRoutine({ date }) {
               onChange={(num) => setSets(num)}
               rounded={true}
               iconStyle={{ color: "white" }}
+              defaultValue={prevSets || 0}
             />
           </View>
 
@@ -118,19 +151,31 @@ function EditRoutine({ date }) {
               onChange={(num) => setReps(num)}
               rounded={true}
               iconStyle={{ color: "white" }}
+              defaultValue={prevReps || 0}
             />
           </View>
         </View>
 
         <View style={{ justifyContent: "center", alignItems: "center" }}>
-          <TouchableOpacity onPress={handleSubmit(handleAddPress)}>
-            <LinearGradient
-              colors={["#cc0000", "#ff0000"]}
-              style={styles.addButton}
-            >
-              <Text style={styles.plus}>+</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+          {isUpdating ? (
+            <TouchableOpacity onPress={handleSubmit(handleUpdatePress)}>
+              <LinearGradient
+                colors={["white", "white"]}
+                style={styles.addButton}
+              >
+                <Image source={update} style={{ width: 100, height: 100 }} />
+              </LinearGradient>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={handleSubmit(handleAddPress)}>
+              <LinearGradient
+                colors={["#cc0000", "#ff0000"]}
+                style={styles.addButton}
+              >
+                <Text style={styles.plus}>+</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </TouchableWithoutFeedback>

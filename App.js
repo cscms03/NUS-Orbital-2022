@@ -19,6 +19,7 @@ export default function App() {
 
       if (isMounted) {
         setSession(true);
+        isMounted = false;
       } else {
         setSession(false);
       }
