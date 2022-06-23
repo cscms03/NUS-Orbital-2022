@@ -10,11 +10,12 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import * as Animatable from "react-native-animatable";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
-import { supabase } from "../../supabaseClient";
 import SolidButton from "../../components/Authentication/SolidButton";
 import CustomInput from "../../components/Authentication/CustomInput";
 import TextButton from "../../components/Authentication/TextButton";
 import { useForm } from "react-hook-form";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, app } from "../../firebase";
 
 const EMAIL_REGEX =
   /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -34,20 +35,16 @@ function SignUpScreen({ navigation }) {
   const password = getValues("password");
 
   const handleGetStartedPress = async (data) => {
-    try {
-      setLoading(true);
-      const { user, error } = await supabase.auth.signUp({
-        email: email,
-        password: password,
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user.email);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        Alert.alert(errorMessage);
       });
-
-      if (error) throw error;
-      alert("Check your email to confirm your account");
-    } catch (error) {
-      alert(error?.message);
-    } finally {
-      setLoading(false);
-    }
   };
 
   const handleGoBackSignInPress = () => {
@@ -109,7 +106,7 @@ function SignUpScreen({ navigation }) {
 
           <SolidButton
             onPress={handleSubmit(handleGetStartedPress)}
-            text="Confirm Email"
+            text="Start Your WorkOut!"
             colors={["#CC0000", "#800000"]}
             alignment="flex-end"
           />

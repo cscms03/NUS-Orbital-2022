@@ -1,14 +1,23 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import SolidButton from "../components/Authentication/SolidButton";
-import { supabase } from "../supabaseClient";
+import { auth } from "../firebase";
+import { signOut } from "firebase/auth";
 
 function HomeScreen() {
   const handleSignOutPress = async () => {
-    const { error } = await supabase.auth.signOut();
+    signOut(auth)
+      .then(() => {
+        console.log("sign out");
+      })
+      .catch((error) => alert(error.message));
   };
+
   return (
     <View style={styles.container}>
+      <Text style={{ fontSize: 20 }}>
+        Current User: {auth.currentUser?.email}
+      </Text>
       <Text style={{ fontSize: 20 }}>Home Screen</Text>
       <SolidButton
         text="Sign out"
