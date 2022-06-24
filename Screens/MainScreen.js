@@ -42,11 +42,31 @@ export default function MainScreen() {
           headerTintColor: "white",
         })}
       >
-        <Tab.Screen name="Planner" component={Planner} />
-        <Tab.Screen name="Time" component={TimeScreen} />
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Diet" component={DietTracker} />
-        <Tab.Screen name="Progress" component={ProgressTracker} />
+        <Tab.Screen
+          name="Planner"
+          component={Planner}
+          options={{ headerShown: false }}
+        />
+        <Tab.Screen
+          name="Time"
+          component={TimeScreen}
+          options={{ headerShown: false }}
+        />
+        <Tab.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ headerShown: false }}
+        />
+        <Tab.Screen
+          name="Diet"
+          component={DietTracker}
+          options={{ headerShown: false }}
+        />
+        <Tab.Screen
+          name="Progress"
+          component={ProgressTracker}
+          options={{ headerShown: false }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );

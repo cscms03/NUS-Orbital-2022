@@ -49,7 +49,7 @@ function SignInScreen({ navigation }) {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        Alert.alert(errorMessage);
+        Alert.alert(errorCode, errorMessage);
       });
   };
 
