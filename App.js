@@ -1,20 +1,42 @@
-import * as React from "react";
-import { Text, View, StyleSheet } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import { StyleSheet, View, StatusBar } from "react-native";
+import AuthStack from "./Screens/Auth/AuthStack";
 import MainScreen from "./Screens/MainScreen";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import Timer from "./components/StopwatchComponents/CountdownTimer";
-import TimeScreen from "./Screens/TimeScreen";
+import { auth } from "./firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function App() {
+  const [session, setSession] = useState(false);
+
+  useEffect(() => {
+    let isMounted = false;
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        isMounted = true;
+      } else {
+        isMounted = false;
+      }
+
+      if (isMounted) {
+        setSession(true);
+        isMounted = false;
+      } else {
+        setSession(false);
+      }
+    });
+  }, []);
+
   return (
-    <SafeAreaProvider>
-      <MainScreen />
-    </SafeAreaProvider>
+    <View style={{ flex: 1 }}>
+      <StatusBar />
+      {session ? (
+        <>
+          <StatusBar />
+          <MainScreen />
+        </>
+      ) : (
+        <AuthStack />
+      )}
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
