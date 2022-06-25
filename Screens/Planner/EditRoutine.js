@@ -16,13 +16,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
 import NumericInput from "react-native-numeric-input";
 import { auth, db } from "../../firebase";
-import {
-  doc,
-  addDoc,
-  collection,
-  updateDoc,
-  serverTimestamp,
-} from "firebase/firestore";
+import { doc, setDoc, addDoc, collection, updateDoc } from "firebase/firestore";
 import update from "../../assets/update.png";
 
 function EditRoutine({
@@ -63,11 +57,11 @@ function EditRoutine({
   };
 
   const handleAddPress = async () => {
+    console.log(name, weight, sets, uid, selectedDate, routineCol);
     try {
       if (selectedDate === undefined) Alert.alert("Please select a date");
       await addDoc(collection(db, userRoutineDoc, "routine"), {
         date: selectedDate,
-        createdAt: serverTimestamp(),
         details: {
           name: name,
           weight: weight,

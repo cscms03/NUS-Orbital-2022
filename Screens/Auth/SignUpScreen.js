@@ -31,6 +31,7 @@ function SignUpScreen({ navigation }) {
   } = useForm();
 
   const pwd = watch("password");
+  const [loading, setLoading] = useState(false);
   const email = getValues("Email");
   const password = getValues("password");
 
@@ -55,13 +56,6 @@ function SignUpScreen({ navigation }) {
 
         doc(collection(db, "users/" + uid, "routine"));
         console.log("doc created");
-      })
-      .then(() => {
-        const user = auth.currentUser;
-        const uid = user.uid;
-
-        doc(collection(db, "users/" + uid, "diet"));
-        console.log("doc2 created");
       })
       .catch((error) => {
         const errorCode = error.code;
