@@ -12,7 +12,6 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import {
   doc,
-  onSnapshot,
   collection,
   getDocs,
   query,

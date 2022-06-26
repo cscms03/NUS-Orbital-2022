@@ -25,10 +25,10 @@ function WorkoutDetails({ date, name, weight, sets, reps, id, isDone }) {
     const document = doc(db, "users/" + uid + "/routine", id);
     await updateDoc(document, {
       details: {
-        name,
-        weight,
-        sets,
-        reps,
+        // name,
+        // weight,
+        // sets,
+        // reps,
         isDone: !isDoneState,
       },
     });

@@ -49,7 +49,7 @@ function DonutChart({
       const strokeDashoffset = circumference - (circumference * maxPerc) / 100; //percentage, length
       if (inputRef?.current) {
         inputRef.current.setNativeProps({
-          text: `${Math.round(v.value)}`,
+          text: `${Math.round((v.value / max) * 100)}`,
         });
       }
       if (circleRef?.current) {

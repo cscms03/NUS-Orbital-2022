@@ -47,7 +47,6 @@ function SignUpScreen({ navigation }) {
         setDoc(doc(db, "users", uid), {
           email: user.email,
         });
-        console.log(db);
       })
       .then(() => {
         const user = auth.currentUser;

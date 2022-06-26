@@ -1,11 +1,45 @@
-import React, { Component, useState } from "react";
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import React, { Component, useState, useEffect, useRef } from "react";
+import { View, Text, StyleSheet, Dimensions, Alert } from "react-native";
 import Swiper from "react-native-swiper";
 import DonutChart from "./DonutChart";
+import {
+  doc,
+  collection,
+  getDocs,
+  query,
+  where,
+  getDoc,
+  onSnapshot,
+} from "firebase/firestore";
+import { auth, db } from "../../firebase";
 
-function DayView() {
-  const [proteinAmt, setProteinAmt] = useState(0);
-  const [proteinTarget, setProteinTarget] = useState(0);
+function DayView({ date }) {
+  console.log(date);
+  //states
+
+  const [item, setItem] = useState([]);
+
+  const user = auth.currentUser;
+  const uid = user.uid;
+
+  useEffect(
+    () =>
+      onSnapshot(collection(db, "users/" + uid + "/diet"), (snapshot) => {
+        setItem(snapshot.docs.map((doc) => doc.data()));
+        console.log(item[0]?.totalProtein);
+      }),
+    []
+  );
+
+  useEffect(
+    () =>
+      onSnapshot(collection(db, "users/" + uid + "/diet"), (snapshot) => {
+        setItem(snapshot.docs.map((doc) => doc.data()));
+        console.log(item[0]?.totalProtein);
+      }),
+    [date]
+  );
+
   return (
     <Swiper loop={false}>
       <View style={styles.proteinView}>
@@ -17,9 +51,11 @@ function DayView() {
             Total protein{"\n"}consumed today:
           </Text>
         </View>
+
         <View style={{ position: "absolute", top: "35%", left: "6%" }}>
-          <Text style={styles.textAmount}>78g</Text>
+          <Text style={styles.textAmount}>{item[0]?.totalProtein || 0}g</Text>
         </View>
+
         <View style={{ position: "absolute", top: "57%", left: "4%" }}>
           <Text style={styles.textSubtitle}>Target amount:</Text>
         </View>
@@ -37,12 +73,12 @@ function DayView() {
 
         <View style={{ position: "absolute", top: "2%", left: "48%" }}>
           <DonutChart
-            percentage={74}
+            percentage={item[0]?.totalProtein || 0}
             radius={90}
             strokeWidth={35}
             duration={1000}
             delay={700}
-            max={100}
+            max={105}
           />
         </View>
       </View>
@@ -55,11 +91,14 @@ function DayView() {
             Total calories{"\n"}consumed today:
           </Text>
         </View>
+
         <View style={{ position: "absolute", top: "37%", left: "5%" }}>
           <Text style={styles.textAmount}>
-            1900<Text style={styles.unit}>kcal</Text>
+            {item[0]?.totalCalories || 0}
+            <Text style={styles.unit}>kcal</Text>
           </Text>
         </View>
+
         <View style={{ position: "absolute", top: "57%", left: "4%" }}>
           <Text style={styles.textSubtitle}>Recommended amount:</Text>
         </View>
@@ -73,11 +112,11 @@ function DayView() {
         </View>
         <View style={{ position: "absolute", top: "2%", left: "48%" }}>
           <DonutChart
-            percentage={97}
+            percentage={item[0]?.totalCalories || 0}
             radius={90}
             strokeWidth={35}
             duration={1000}
-            max={100}
+            max={2000}
           />
         </View>
       </View>

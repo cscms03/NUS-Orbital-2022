@@ -1,24 +1,30 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   Dimensions,
+  TouchableOpacity,
   TextInput,
+  Alert,
 } from "react-native";
 import Modal from "react-native-modal";
-import { MaterialIcons } from "@expo/vector-icons";
 import SolidButton from "../Authentication/SolidButton";
 import CustomInput from "./CustomInput";
 import { useForm } from "react-hook-form";
 import { auth, db } from "../../firebase";
+import { BottomSheet } from "react-native-btr";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import {
   doc,
-  addDoc,
   collection,
-  updateDoc,
+  getDoc,
+  setDoc,
   serverTimestamp,
+  updateDoc,
+  onSnapshot,
+  increment,
+  deleteDoc,
 } from "firebase/firestore";
 
 function MealInput({ title, date }) {
@@ -29,52 +35,173 @@ function MealInput({ title, date }) {
     getValues,
   } = useForm();
 
+  const user = auth.currentUser;
+  const uid = user.uid;
+  const dietCol = collection(db, "users/" + uid + "/diet");
+
+  const [currMeal, setCurrMeal] = useState("");
   const [modal, setModal] = useState(false);
   const foodName = getValues("food");
   const [protein, setProtein] = useState("");
   const [calories, setCalories] = useState("");
+  const [mealItem, setMealItem] = useState([]);
+  const [BottomSheetVisible, setBottomSheetVisible] = useState(false);
 
-  const handleAddPress = () => {
-    // try {
-    //   await addDoc(collection(db, u, "routine"), {
-    //     date: date,
-    //     createdAt: serverTimestamp(),
-    //     breakfast: {
-    //       protein: protein,
+  const proteinNum = Number(protein);
+  const caloriesNum = Number(calories);
+  const docRef = doc(collection(db, "users/" + uid + "/diet"), date);
+  const dietColRef = doc(
+    collection(db, "users/" + uid + "/diet/" + date, title),
+    "default"
+  );
 
-    //     },
-    //     lunch: {
-
-    //     },
-    //     dinner: {
-
-    //     },
-    //     snacks: {
-
-    //     }
-    //   });
-    //   Alert.alert("Plan added! Please exit");
-    // } catch (error) {
-    //   console.log(error.message);
-    //   Alert.alert(error.message);
-    // }s
-    setModal(!modal);
+  const handleAddPress = async () => {
+    setDoc(
+      dietColRef,
+      {
+        name: foodName,
+        isAdded: true,
+        protein: proteinNum,
+        calories: caloriesNum,
+      },
+      { merge: true }
+    )
+      .then(() => {
+        setDoc(
+          docRef,
+          {
+            weekAgo: 0, //this week: 0, last week: 1, two weeks ago or more: 2
+            date: date,
+            totalProtein: increment(proteinNum),
+            totalCalories: increment(caloriesNum),
+          },
+          { merge: true }
+        );
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        Alert.alert(errorCode, errorMessage);
+      })
+      .finally(() => {
+        setModal(!modal);
+      });
   };
 
   const handleModal = () => {
     setModal(!modal);
   };
+
+  const handleBottomSheet = () => {
+    setBottomSheetVisible(!BottomSheetVisible);
+  };
+
+  const handleReset = async () => {
+    try {
+      await deleteDoc(
+        doc(
+          collection(db, "users/" + uid + "/diet/" + date + "/Breakfast"),
+          "default"
+        )
+      );
+      await deleteDoc(
+        doc(
+          collection(db, "users/" + uid + "/diet/" + date + "/Lunch"),
+          "default"
+        )
+      );
+      await deleteDoc(
+        doc(
+          collection(db, "users/" + uid + "/diet/" + date + "/Dinner"),
+          "default"
+        )
+      );
+      await deleteDoc(
+        doc(
+          collection(db, "users/" + uid + "/diet/" + date + "/Snacks"),
+          "default"
+        )
+      );
+      await setDoc(docRef, {
+        weekAgo: 0, //this week: 0, last week: 1, two weeks ago or more: 2
+        date: date,
+        totalProtein: 0,
+        totalCalories: 0,
+      });
+    } catch (error) {
+      Alert.alert(error.message);
+    } finally {
+      setBottomSheetVisible(!BottomSheetVisible);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteDoc(
+        doc(
+          collection(db, "users/" + uid + "/diet/" + date + "/" + title),
+          "default"
+        )
+      );
+      await setDoc(
+        docRef,
+        {
+          weekAgo: 0, //this week: 0, last week: 1, two weeks ago or more: 2
+          date: date,
+          totalProtein: increment(-proteinNum),
+          totalCalories: increment(-caloriesNum),
+        },
+        { merge: true }
+      );
+    } catch (error) {
+      Alert.alert(error.message);
+    } finally {
+      setBottomSheetVisible(!BottomSheetVisible);
+    }
+  };
+
+  useEffect(
+    () =>
+      onSnapshot(
+        collection(db, "users/" + uid + "/diet/" + date + "/" + title),
+        (snapshot) => {
+          setMealItem(snapshot?.docs?.map((doc) => doc.data()));
+          console.log(mealItem);
+        }
+      ),
+    [date]
+  );
+
   return (
-    <>
-      <TouchableOpacity onPress={handleModal}>
-        <View style={styles.container}>
-          <Text>{title}</Text>
-          <MaterialIcons name="navigate-next" size={24} color="black" />
-        </View>
-      </TouchableOpacity>
+    <TouchableOpacity
+      onPress={mealItem[0]?.isAdded ? handleBottomSheet : handleModal}
+    >
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: mealItem[0]?.isAdded ? "#cfc" : "white" },
+        ]}
+      >
+        <Text>{title}</Text>
+        <Text></Text>
+        <MaterialIcons name="navigate-next" size={24} color="black" />
+      </View>
+
       <View>
         <Modal isVisible={modal} style={styles.modal} avoidKeyboard={true}>
           <View style={styles.modalContainer}>
+            <View style={{ justifyContent: "center", alignItems: "center" }}>
+              <Text
+                style={{
+                  fontSize: 20,
+                  color: "#930000",
+                  fontWeight: "bold",
+                  marginBottom: 5,
+                }}
+              >
+                {title}
+              </Text>
+            </View>
             <CustomInput
               name="food"
               placeholder="Food name"
@@ -139,7 +266,40 @@ function MealInput({ title, date }) {
           </View>
         </Modal>
       </View>
-    </>
+      <BottomSheet
+        visible={BottomSheetVisible}
+        onBackButtonPress={handleBottomSheet}
+        onBackdropPress={handleBottomSheet}
+      >
+        <View style={styles.bottomSheetContainer}>
+          <TouchableOpacity
+            style={styles.bottomSheetButton}
+            onPress={handleDelete}
+          >
+            <AntDesign name="delete" size={20} color="red" />
+            <Text style={{ fontSize: 17, marginLeft: 17, color: "red" }}>
+              Delete
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleBottomSheet}
+            style={[styles.bottomSheetButton]}
+          >
+            <MaterialIcons name="cancel" size={20} color="black" />
+            <Text style={{ fontSize: 17, marginLeft: 17 }}>Cancel</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleReset}
+            style={[styles.bottomSheetButton, { borderBottomColor: "white" }]}
+          >
+            <MaterialIcons name="auto-delete" size={24} color="grey" />
+            <Text style={{ fontSize: 17, marginLeft: 17, color: "grey" }}>
+              Reset
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </BottomSheet>
+    </TouchableOpacity>
   );
 }
 
@@ -163,7 +323,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: Dimensions.get("window").width * 0.83,
-    height: 375,
+    height: 395,
     backgroundColor: "white",
     borderRadius: 15,
     backgroundColor: "#f9fbfc",
@@ -193,5 +353,22 @@ const styles = StyleSheet.create({
     color: "#930000",
     fontSize: 20,
     fontWeight: "bold",
+  },
+  bottomSheetContainer: {
+    width: "100%",
+    height: 230,
+    borderRadius: 15,
+    backgroundColor: "white",
+    paddingTop: 30,
+  },
+  bottomSheetButton: {
+    flexDirection: "row",
+    paddingHorizontal: 10,
+    alignItems: "center",
+    marginHorizontal: 20,
+    marginBottom: 20,
+    borderBottomWidth: 1,
+    paddingBottom: 17,
+    borderColor: "#e6e6e6",
   },
 });
