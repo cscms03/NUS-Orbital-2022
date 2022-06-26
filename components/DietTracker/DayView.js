@@ -44,7 +44,7 @@ function DayView({ date }) {
   );
 
   return (
-    <Swiper loop={false}>
+    <Swiper loop={false} activeDotColor="#cc0000">
       <View style={styles.proteinView}>
         <View style={{ position: "absolute", top: "2%", left: "4%" }}>
           <Text style={styles.textTitle}>Protein</Text>
@@ -147,11 +147,11 @@ const styles = StyleSheet.create({
     fontSize: 37,
   },
   textSubtitle: {
-    fontWeight: "700",
-    fontSize: 17,
+    fontWeight: "600",
+    fontSize: 16,
   },
   textAmount: {
-    fontWeight: "800",
+    fontWeight: "700",
     fontSize: 37,
   },
   textInfo: {

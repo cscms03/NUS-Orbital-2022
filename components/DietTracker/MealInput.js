@@ -14,7 +14,7 @@ import CustomInput from "./CustomInput";
 import { useForm } from "react-hook-form";
 import { auth, db } from "../../firebase";
 import { BottomSheet } from "react-native-btr";
-import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, MaterialIcons, Entypo } from "@expo/vector-icons";
 import {
   doc,
   collection,
@@ -202,9 +202,12 @@ function MealInput({ title }) {
           { backgroundColor: mealItem[0]?.isAdded ? "#cfc" : "white" },
         ]}
       >
-        <Text>{title}</Text>
-        <Text></Text>
-        <MaterialIcons name="navigate-next" size={24} color="black" />
+        <Text style={{ fontSize: 16 }}>{title}</Text>
+        {mealItem[0]?.isAdded ? (
+          <Entypo name="check" size={24} color="#093" />
+        ) : (
+          <MaterialIcons name="navigate-next" size={24} color="black" />
+        )}
       </View>
 
       <View>

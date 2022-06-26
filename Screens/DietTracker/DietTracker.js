@@ -57,19 +57,7 @@ function DietTracker() {
       </View>
 
       <View style={styles.header}>
-        {/* <TouchableHighlight
-          style={{ marginRight: 10, borderRadius: 20 }}
-          underlayColor="blue"
-          onShowUnderlay={handleUnderLayShown}
-          onHideUnderlay={handleUnderLayHidden}
-        ></TouchableHighlight> */}
         <Text style={{ fontSize: 20, fontWeight: "500" }}>{date}</Text>
-        {/* <TouchableHighlight
-          style={{ marginRight: 10, borderRadius: 20 }}
-          underlayColor="blue"
-          onShowUnderlay={handleUnderLayShown}
-          onHideUnderlay={handleUnderLayHidden}
-        ></TouchableHighlight> */}
       </View>
 
       <View style={styles.tabContainer}>
@@ -78,6 +66,9 @@ function DietTracker() {
           onTabPress={handleTabPress}
           selectedIndex={selectedIndex}
           tabsContainerStyle={{ borderColor: "#cc0000" }}
+          tabStyle={styles.tabStyle}
+          activeTabStyle={styles.activeTabStyle}
+          tabTextStyle={{ color: "#cc0000" }}
         />
       </View>
 
@@ -129,6 +120,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 10,
     marginBottom: 10,
+  },
+  tabStyle: {
+    borderColor: "#CC0000",
+  },
+  activeTabStyle: {
+    backgroundColor: "#cc0000",
   },
 });
 
