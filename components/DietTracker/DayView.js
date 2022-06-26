@@ -22,20 +22,23 @@ function DayView({ date }) {
   const user = auth.currentUser;
   const uid = user.uid;
 
+  const dietColRef = collection(db, "users/" + uid + "/diet");
+  const q = query(dietColRef, where("date", "==", date));
+
   useEffect(
     () =>
-      onSnapshot(collection(db, "users/" + uid + "/diet"), (snapshot) => {
-        setItem(snapshot.docs.map((doc) => doc.data()));
-        console.log(item[0]?.totalProtein);
+      onSnapshot(doc(db, "users/" + uid + "/diet/" + date), (snapshot) => {
+        setItem(snapshot.data());
+        console.log(item?.totalProtein);
       }),
     []
   );
 
   useEffect(
     () =>
-      onSnapshot(collection(db, "users/" + uid + "/diet"), (snapshot) => {
-        setItem(snapshot.docs.map((doc) => doc.data()));
-        console.log(item[0]?.totalProtein);
+      onSnapshot(doc(db, "users/" + uid + "/diet/" + date), (snapshot) => {
+        setItem(snapshot.data());
+        console.log(item?.totalProtein);
       }),
     [date]
   );
@@ -53,7 +56,7 @@ function DayView({ date }) {
         </View>
 
         <View style={{ position: "absolute", top: "35%", left: "6%" }}>
-          <Text style={styles.textAmount}>{item[0]?.totalProtein || 0}g</Text>
+          <Text style={styles.textAmount}>{item?.totalProtein || 0}g</Text>
         </View>
 
         <View style={{ position: "absolute", top: "57%", left: "4%" }}>
@@ -73,7 +76,7 @@ function DayView({ date }) {
 
         <View style={{ position: "absolute", top: "2%", left: "48%" }}>
           <DonutChart
-            percentage={item[0]?.totalProtein || 0}
+            percentage={item?.totalProtein || 0}
             radius={90}
             strokeWidth={35}
             duration={1000}
@@ -94,7 +97,7 @@ function DayView({ date }) {
 
         <View style={{ position: "absolute", top: "37%", left: "5%" }}>
           <Text style={styles.textAmount}>
-            {item[0]?.totalCalories || 0}
+            {item?.totalCalories || 0}
             <Text style={styles.unit}>kcal</Text>
           </Text>
         </View>
@@ -112,7 +115,7 @@ function DayView({ date }) {
         </View>
         <View style={{ position: "absolute", top: "2%", left: "48%" }}>
           <DonutChart
-            percentage={item[0]?.totalCalories || 0}
+            percentage={item?.totalCalories || 0}
             radius={90}
             strokeWidth={35}
             duration={1000}

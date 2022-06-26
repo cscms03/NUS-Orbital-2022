@@ -22,12 +22,13 @@ import {
   setDoc,
   serverTimestamp,
   updateDoc,
+  QuerySnapshot,
   onSnapshot,
   increment,
   deleteDoc,
 } from "firebase/firestore";
 
-function MealInput({ title, date }) {
+function MealInput({ title }) {
   const {
     control,
     handleSubmit,
@@ -35,6 +36,16 @@ function MealInput({ title, date }) {
     getValues,
   } = useForm();
 
+  const printDate = () => {
+    return (
+      `${new Date().getFullYear()}` +
+      "-" +
+      `${new Date().getMonth() + 1}` +
+      "-" +
+      `${new Date().getDate()}`
+    );
+  };
+  const date = printDate();
   const user = auth.currentUser;
   const uid = user.uid;
   const dietCol = collection(db, "users/" + uid + "/diet");
@@ -137,6 +148,15 @@ function MealInput({ title, date }) {
 
   const handleDelete = async () => {
     try {
+      const docSnap = await getDoc(
+        doc(
+          collection(db, "users/" + uid + "/diet/" + date + "/" + title),
+          "default"
+        )
+      );
+      const prevProtein = docSnap.data().protein;
+      const prevCal = docSnap.data().calories;
+
       await deleteDoc(
         doc(
           collection(db, "users/" + uid + "/diet/" + date + "/" + title),
@@ -148,8 +168,8 @@ function MealInput({ title, date }) {
         {
           weekAgo: 0, //this week: 0, last week: 1, two weeks ago or more: 2
           date: date,
-          totalProtein: increment(-proteinNum),
-          totalCalories: increment(-caloriesNum),
+          totalProtein: increment(-prevProtein),
+          totalCalories: increment(-prevCal),
         },
         { merge: true }
       );

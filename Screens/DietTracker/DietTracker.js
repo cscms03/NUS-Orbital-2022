@@ -14,24 +14,17 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useEffect, useRef, useState } from "react";
 import SegmentedControlTab from "react-native-segmented-control-tab";
 import DayView from "../../components/DietTracker/DayView";
-import WeekView from "../../components/DietTracker/WeekView";
+import History from "../../components/DietTracker/History";
 import MealInput from "../../components/DietTracker/MealInput";
 import Meals from "../../components/DietTracker/Meals";
 
 function DietTracker() {
   const [pressed, setPressed] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  // const [thisDate, setThisDate] = useState(getDate(0));
-  // const [daysAway, setDaysAway] = useState(0);
-
-  const thisDate = useRef(getDate(0));
-  const daysAway = useRef(0);
-
-  const isSunday = (date) => {
-    return date.getDay() === 0;
-  };
 
   const today = new Date();
+
+  console.log(today);
 
   //prints date object in yyyy-mm-dd format
   const printDate = () => {
@@ -44,36 +37,7 @@ function DietTracker() {
     );
   };
 
-  const handlePrevious = () => {
-    if (daysAway.current >= 7) {
-      Alert.alert("You can only view data from the last 7 days");
-    } else {
-      daysAway.current++;
-      thisDate.current = getDate(daysAway.current);
-    }
-  };
-
-  const handleNext = () => {
-    if (daysAway.current === 0) {
-      Alert.alert("Cannot view/edit tomorrow's data!");
-    } else {
-      daysAway.current--;
-      thisDate.current = getDate(daysAway.current);
-    }
-  };
-
-  function getDate(days) {
-    const date = new Date(new Date().getTime() - 24 * 60 * 60 * 1000 * days);
-    return JSON.stringify(JSON.stringify(date).substring(1, 11));
-  }
-
-  const handleUnderLayShown = () => {
-    setPressed(true);
-  };
-
-  const handleUnderLayHidden = () => {
-    setPressed(false);
-  };
+  const date = printDate();
 
   const handleTabPress = () => {
     setSelectedIndex(selectedIndex === 0 ? 1 : 0);
@@ -93,59 +57,45 @@ function DietTracker() {
       </View>
 
       <View style={styles.header}>
-        <TouchableHighlight
+        {/* <TouchableHighlight
           style={{ marginRight: 10, borderRadius: 20 }}
-          onPress={handlePrevious}
           underlayColor="blue"
           onShowUnderlay={handleUnderLayShown}
           onHideUnderlay={handleUnderLayHidden}
-        >
-          <MaterialIcons
-            name="navigate-before"
-            size={33}
-            color={pressed ? "white" : "black"}
-          />
-        </TouchableHighlight>
-        <Text style={{ fontSize: 20, fontWeight: "500" }}>
-          {thisDate.current.substring(1, 11)}
-        </Text>
-        <TouchableHighlight
+        ></TouchableHighlight> */}
+        <Text style={{ fontSize: 20, fontWeight: "500" }}>{date}</Text>
+        {/* <TouchableHighlight
           style={{ marginRight: 10, borderRadius: 20 }}
-          onPress={handleNext}
           underlayColor="blue"
           onShowUnderlay={handleUnderLayShown}
           onHideUnderlay={handleUnderLayHidden}
-        >
-          <MaterialIcons
-            name="navigate-next"
-            size={33}
-            color={pressed ? "white" : "black"}
-          />
-        </TouchableHighlight>
+        ></TouchableHighlight> */}
       </View>
 
       <View style={styles.tabContainer}>
         <SegmentedControlTab
-          values={["Day", "Week"]}
+          values={["Today", "History"]}
           onTabPress={handleTabPress}
           selectedIndex={selectedIndex}
           tabsContainerStyle={{ borderColor: "#cc0000" }}
         />
       </View>
 
-      <View style={styles.viewContainer}>
-        {selectedIndex === 0 ? (
-          <DayView date={thisDate.current.substring(1, 11)} />
-        ) : (
-          <WeekView />
-        )}
-      </View>
-      <ScrollView
-        style={styles.mealInputContainer}
-        showsVerticalScrollIndicator={false}
-      >
-        <Meals date={thisDate.current.substring(1, 11)} />
-      </ScrollView>
+      {selectedIndex === 0 ? (
+        <>
+          <View style={styles.viewContainer}>
+            <DayView date={date} />
+          </View>
+          <ScrollView
+            style={styles.mealInputContainer}
+            showsVerticalScrollIndicator={false}
+          >
+            <Meals date={date} />
+          </ScrollView>
+        </>
+      ) : (
+        <History date={date} />
+      )}
     </SafeAreaView>
   );
 }

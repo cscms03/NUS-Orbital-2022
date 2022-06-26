@@ -8,6 +8,7 @@ import {
   FlatList,
   Alert,
   Image,
+  Dimensions,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import {
@@ -90,7 +91,7 @@ export default Routine;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    //   width: Dimensions.get("window").width * 0.96,
     width: "100%",
     height: 100,
     margin: 20,
