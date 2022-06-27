@@ -31,8 +31,9 @@ function SignUpScreen({ navigation }) {
   } = useForm();
 
   const pwd = watch("password");
-  const email = getValues("Email");
-  const password = getValues("password");
+  const [loading, setLoading] = useState(false);
+  const email = watch("Email");
+  const password = watch("password");
 
   const handleGetStartedPress = async (data) => {
     createUserWithEmailAndPassword(auth, email, password)
