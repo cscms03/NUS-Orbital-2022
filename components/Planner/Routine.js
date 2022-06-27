@@ -58,34 +58,25 @@ function Routine({ date, modal }) {
   return (
     <>
       <View style={styles.container}>
-        {items.length === 0 ? (
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              height: Dimensions.get("screen").height * 0.5,
-            }}
-          >
-            <Entypo name="progress-empty" size={170} color="grey" />
-            <Text style={{ color: "grey" }}>Empty!</Text>
-          </View>
-        ) : (
-          <FlatList
-            data={items}
-            renderItem={(data) => (
-              <WorkoutDetails
-                date={date}
-                name={data?.item.details?.name}
-                weight={data?.item.details?.weight}
-                sets={data?.item.details?.sets}
-                reps={data?.item.details?.reps}
-                id={data?.item.id}
-                isDone={data?.item.details?.isDone}
-              />
-            )}
-            showsVerticalScrollIndicator={false}
-          />
-        )}
+        <FlatList
+          data={items}
+          renderItem={(data) => {
+            if (data?.item.date === date) {
+              return (
+                <WorkoutDetails
+                  date={date}
+                  name={data?.item.details?.name}
+                  weight={data?.item.details?.weight}
+                  sets={data?.item.details?.sets}
+                  reps={data?.item.details?.reps}
+                  id={data?.item.id}
+                  isDone={data?.item.details?.isDone}
+                />
+              );
+            }
+          }}
+          showsVerticalScrollIndicator={false}
+        />
       </View>
       <TouchableOpacity
         style={{ position: "absolute", top: "96%", left: "70%" }}
