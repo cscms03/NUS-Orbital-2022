@@ -58,27 +58,6 @@ function Routine({ date, modal }) {
   return (
     <>
       <View style={styles.container}>
-<<<<<<< HEAD:Screens/Planner/Routine.js
-        <FlatList
-          data={items}
-          renderItem={(data) => {
-            if (data?.item.date === date) {
-              return (
-                <WorkoutDetails
-                  date={date}
-                  name={data?.item.details?.name}
-                  weight={data?.item.details?.weight}
-                  sets={data?.item.details?.sets}
-                  reps={data?.item.details?.reps}
-                  id={data?.item.id}
-                  isDone={data?.item.details?.isDone}
-                />
-              );
-            }
-          }}
-          showsVerticalScrollIndicator={false}
-        />
-=======
         {items.length === 0 ? (
           <View
             style={{
@@ -107,7 +86,6 @@ function Routine({ date, modal }) {
             showsVerticalScrollIndicator={false}
           />
         )}
->>>>>>> master:components/Planner/Routine.js
       </View>
       <TouchableOpacity
         style={{ position: "absolute", top: "96%", left: "70%" }}
