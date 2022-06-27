@@ -55,9 +55,6 @@ function Routine({ date, modal }) {
     setRefresh(!refresh);
   };
 
-  console.log(date);
-  console.log(items[0].date);
-
   return (
     <>
       <View style={styles.container}>
