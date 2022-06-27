@@ -8,6 +8,7 @@ import ProgressTracker from "./ProgressTracker";
 import TimeScreen from "./TimeScreen";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Planner from "./Planner/Planner";
+import PlannerUpdate from "./Planner/PlannerUpdate";
 
 export default function MainScreen() {
   const Tab = createBottomTabNavigator();
@@ -42,6 +43,12 @@ export default function MainScreen() {
           headerTintColor: "white",
         })}
       >
+        {/* <Tab.Screen
+          name="PlannerUpdate"
+          component={PlannerUpdate}
+          options={{ headerShown: false }}
+        /> */}
+
         <Tab.Screen
           name="Planner"
           component={Planner}
@@ -50,7 +57,7 @@ export default function MainScreen() {
         <Tab.Screen
           name="Time"
           component={TimeScreen}
-          options={{ headerShown: false }}
+          options={{ headerShown: true }}
         />
         <Tab.Screen
           name="Home"
@@ -65,7 +72,7 @@ export default function MainScreen() {
         <Tab.Screen
           name="Progress"
           component={ProgressTracker}
-          options={{ headerShown: false }}
+          options={{ headerShown: true }}
         />
       </Tab.Navigator>
     </NavigationContainer>

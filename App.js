@@ -8,6 +8,23 @@ import { onAuthStateChanged } from "firebase/auth";
 export default function App() {
   const [session, setSession] = useState(false);
 
+  // const useEffectFunc = () => {
+  //   onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //       setSession(true);
+  //     } else {
+  //       setSession(false);
+  //     }
+  //   });
+  // }
+
+  // useEffect(() => {
+  //   useEffectFunc();
+  //   return () => {
+  //     setSession(false);
+  //   }
+  // }, []);
+
   useEffect(() => {
     let isMounted = false;
     onAuthStateChanged(auth, (user) => {

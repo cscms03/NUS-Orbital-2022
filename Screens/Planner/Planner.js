@@ -34,7 +34,6 @@ const maxDate = yyyy + "-" + maxmm + "-" + dd;
 function Planner() {
   const ref = useRef();
   const date = () => {
-    console.log(ref?.current?.getSelectedDate());
     return ref?.current?.getSelectedDate();
   };
   const now = JSON.stringify(date())?.substring(1, 11);
@@ -97,13 +96,13 @@ function Planner() {
         <Text
           style={{
             alignSelf: "center",
-            marginTop: 5,
-            fontSize: 25,
+            marginTop: 10,
+            fontSize: 27,
             textAlign: "center",
-            fontWeight: "bold",
+            fontWeight: "500",
           }}
         >
-          Selected date: {JSON.stringify(now)?.substring(1, 11)}
+          {now ? JSON.stringify(now)?.substring(1, 11) : "No Date Selected"}
         </Text>
       </View>
 
@@ -113,7 +112,7 @@ function Planner() {
 
       <View style={{ position: "absolute", top: "90%", left: "10%" }}>
         <SolidButton
-          colors={["#cc0000", "#990000"]}
+          colors={["#cc0000", "#cc0000"]}
           text="Add more plans!"
           alignment="flex-start"
           onPress={handleEditPress}
@@ -128,7 +127,7 @@ function Planner() {
         <EditRoutine date={now} />
         <View style={{ marginVertical: -30 }}>
           <SolidButton
-            colors={["#cc0000", "#ff0000"]}
+            colors={["#cc0000", "#cc0000"]}
             text="Close"
             alignment="center"
             onPress={handleClosePress}
@@ -147,6 +146,7 @@ const styles = StyleSheet.create({
   routine: {
     flex: 0.9,
     alignItems: "center",
+    marginTop: 5,
     margin: 15,
   },
 });

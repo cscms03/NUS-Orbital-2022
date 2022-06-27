@@ -29,7 +29,7 @@ function InputField({
           <View
             style={[
               styles.container,
-              { borderColor: error ? "red" : "#4d4d4d" },
+              { borderColor: error ? "red" : "#e6e6e6" },
             ]}
           >
             <TextInput
@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 50,
     borderWidth: 1.2,
+    borderColor: "#e6e6e6",
     borderRadius: 20,
     paddingHorizontal: 10,
     justifyContent: "center",
