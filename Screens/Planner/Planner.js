@@ -7,7 +7,7 @@ import {
   Modal,
   StatusBar,
 } from "react-native";
-import Routine from "./Routine";
+import Routine from "../../components/Planner/Routine";
 import SolidButton from "../../components/Authentication/SolidButton";
 import EditRoutine from "./EditRoutine";
 import CalendarStrip from "react-native-calendar-strip";

@@ -8,6 +8,7 @@ import {
   Alert,
 } from "react-native";
 import HistoryLog from "./HistoryLog";
+import { Entypo } from "@expo/vector-icons";
 import {
   doc,
   collection,
@@ -45,7 +46,10 @@ function History() {
   return (
     <View style={styles.container}>
       {items.length === 0 ? (
-        <Text>Empty</Text>
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <Entypo name="progress-empty" size={170} color="grey" />
+          <Text style={{ color: "grey" }}>Empty!</Text>
+        </View>
       ) : (
         <FlatList
           data={items}

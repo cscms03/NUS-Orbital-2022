@@ -55,18 +55,18 @@ export default function MainScreen() {
         <Tab.Screen
           name="Time"
           component={TimeScreen}
-          options={{ headerShown: false }}
+          options={{ headerShown: true }}
         />
         <Tab.Screen
           name="Home"
           component={HomeScreen}
-          options={{ headerShown: false }}
+          options={{ headerShown: true }}
         />
 
         <Tab.Screen
           name="Progress"
           component={ProgressTracker}
-          options={{ headerShown: false }}
+          options={{ headerShown: true }}
         />
       </Tab.Navigator>
     </NavigationContainer>
