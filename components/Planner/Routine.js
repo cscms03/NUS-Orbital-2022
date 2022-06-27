@@ -8,11 +8,11 @@ import {
   FlatList,
   Alert,
   Image,
+  Dimensions,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
+import { Entypo } from "@expo/vector-icons";
 import {
   doc,
-  onSnapshot,
   collection,
   getDocs,
   query,
@@ -58,7 +58,16 @@ function Routine({ date, modal }) {
     <>
       <View style={styles.container}>
         {items.length === 0 ? (
-          <Text>Empty</Text>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              height: Dimensions.get("screen").height * 0.5,
+            }}
+          >
+            <Entypo name="progress-empty" size={170} color="grey" />
+            <Text style={{ color: "grey" }}>Empty!</Text>
+          </View>
         ) : (
           <FlatList
             data={items}
@@ -91,9 +100,9 @@ export default Routine;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    //   width: Dimensions.get("window").width * 0.96,
     width: "100%",
-    height: 100,
+    height: "100%",
     margin: 20,
     // backgroundColor: "#f2f2f2",
     borderRadius: 10,
