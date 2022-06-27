@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 import { View, Text, StyleSheet, Modal, Alert } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { BottomSheet } from "react-native-btr";
@@ -6,7 +6,12 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import SolidButton from "../Authentication/SolidButton";
 import { updateDoc, doc, deleteDoc } from "firebase/firestore";
 import { db, auth } from "../../firebase";
+<<<<<<< HEAD:Screens/Planner/WorkoutDetails.js
+import EditRoutine from "./EditRoutine";
+import { Ionicons, Entypo, AntDesign, MaterialIcons } from "@expo/vector-icons";
+=======
 import EditRoutine from "../../Screens/Planner/EditRoutine";
+>>>>>>> master:components/Planner/WorkoutDetails.js
 
 function WorkoutDetails({ date, name, weight, sets, reps, id, isDone }) {
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
@@ -35,36 +40,55 @@ function WorkoutDetails({ date, name, weight, sets, reps, id, isDone }) {
     setBottomSheetVisible(!bottomSheetVisible);
   };
   const handleEditPress = () => {
-    console.log("pressed");
     setModalVisible((prev) => !prev);
   };
+
   const handleDeletePress = async () => {
     const document = doc(db, "users/" + uid + "/routine", id);
     try {
       await deleteDoc(document);
-      Alert.alert("Deleted! Please refresh");
     } catch (error) {
       Alert.alert(error.message);
     } finally {
       setBottomSheetVisible(!bottomSheetVisible);
     }
   };
+
+  // //cleanup
+  // useEffect(() => {
+  //   return () => {
+  //     setBottomSheetVisible(false);
+  //     setModalVisible(false);
+  //   };
+  // });
+
   return (
-    <View style={styles.planContainer}>
+    <View
+      style={[
+        styles.planContainer,
+        { backgroundColor: isDoneState ? "#6f6" : "#fff" },
+      ]}
+    >
       <TouchableOpacity onPress={handleItemPress}>
-        <LinearGradient
-          colors={isDoneState ? ["#cfc", "#66ff66"] : ["#fff", "#f2f2f2"]}
-          style={styles.con}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-        >
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.weight}>{weight}</Text>
-          <Text style={styles.kg}> kg</Text>
-          <Text style={styles.setsReps}>
-            {sets} sets x {reps} reps
-          </Text>
-        </LinearGradient>
+        <View style={styles.con}>
+          <View style={styles.nameContainer}>
+            <Text style={styles.name}>{name}</Text>
+          </View>
+          <View style={styles.detailsContainer}>
+            <View style={styles.detailsColumn}>
+              <Text style={styles.units}>S</Text>
+              <Text style={styles.details}>{sets}</Text>
+            </View>
+            <View style={styles.detailsColumn}>
+              <Text style={styles.units}>R</Text>
+              <Text style={styles.details}>{reps}</Text>
+            </View>
+            <View style={styles.detailsColumn}>
+              <Text style={styles.units}>kg</Text>
+              <Text style={styles.details}>{weight}</Text>
+            </View>
+          </View>
+        </View>
       </TouchableOpacity>
 
       <BottomSheet
@@ -72,30 +96,74 @@ function WorkoutDetails({ date, name, weight, sets, reps, id, isDone }) {
         onBackButtonPress={handleItemPress}
         onBackdropPress={handleItemPress}
       >
-        <View style={styles.bottomSheetView}>
-          <TouchableOpacity onPress={handleIsDonePress}>
-            <LinearGradient colors={["#3c3", "#3c3"]} style={styles.button}>
-              {isDoneState ? (
-                <Text style={styles.textButton}>Mark as not Done</Text>
-              ) : (
-                <Text style={styles.textButton}>Mark as Done</Text>
-              )}
-            </LinearGradient>
+        <View style={styles.bottomSheetContainer}>
+          <TouchableOpacity
+            onPress={handleIsDonePress}
+            style={styles.bottomSheetButton}
+          >
+            {!isDoneState ? (
+              <>
+                <Ionicons name="checkmark-done" size={24} color="#093" />
+                <Text
+                  style={{
+                    color: "#093",
+                    marginLeft: 10,
+                    fontSize: 16,
+                    fontWeight: "500",
+                  }}
+                >
+                  Mark as done
+                </Text>
+              </>
+            ) : (
+              <>
+                <Entypo name="circle-with-cross" size={24} color="#800000" />
+                <Text
+                  style={{
+                    color: "#800000",
+                    marginLeft: 10,
+                    fontSize: 16,
+                    fontWeight: "500",
+                  }}
+                >
+                  Mark as not done
+                </Text>
+              </>
+            )}
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={handleEditPress}>
-            <LinearGradient colors={["#c00", "#c00"]} style={styles.button}>
-              <Text style={styles.textButton}>Edit</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={handleDeletePress}>
-            <LinearGradient
-              colors={["#f2f2f2", "#f2f2f2"]}
-              style={styles.button}
+          <TouchableOpacity
+            onPress={handleEditPress}
+            style={styles.bottomSheetButton}
+          >
+            <MaterialIcons name="edit" size={24} color="black" />
+            <Text
+              style={{
+                color: "black",
+                marginLeft: 10,
+                fontSize: 16,
+                fontWeight: "500",
+              }}
             >
-              <Text style={{ fontWeight: "bold" }}>Delete</Text>
-            </LinearGradient>
+              Edit
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={handleDeletePress}
+            style={styles.bottomSheetButton}
+          >
+            <AntDesign name="delete" size={24} color="red" />
+            <Text
+              style={{
+                color: "red",
+                marginLeft: 10,
+                fontSize: 16,
+                fontWeight: "500",
+              }}
+            >
+              Delete
+            </Text>
           </TouchableOpacity>
         </View>
         <Modal
@@ -114,7 +182,7 @@ function WorkoutDetails({ date, name, weight, sets, reps, id, isDone }) {
             isDone={isDoneState}
           />
           <SolidButton
-            colors={["#cc0000", "#ff0000"]}
+            colors={["#cc0000", "#cc0000"]}
             text="Close"
             alignment="center"
             onPress={handleEditPress}
@@ -129,58 +197,30 @@ export default WorkoutDetails;
 
 const styles = StyleSheet.create({
   planContainer: {
-    // overflow: "visible",
     width: "100%",
     marginBottom: 10,
-    borderBottomColor: "#f2f2f2",
-    borderBottomWidth: 1,
-    borderBottomEndRadius: 12,
-    borderBottomStartRadius: 12,
+    borderColor: "#d9d9d9",
+    borderWidth: 1,
+    borderRadius: 20,
   },
   con: {
     width: "100%",
     height: 100,
-    borderRadius: 12,
     padding: 5,
-    borderBottomColor: "black",
-    borderBottomWidth: 1,
+
+    flexDirection: "row",
   },
   name: {
-    position: "absolute",
-    color: "#990000",
-    left: "5%",
-    top: "5%",
-    fontSize: 30,
-    fontWeight: "800",
-  },
-  weight: {
-    position: "absolute",
-    left: "73%",
-    fontSize: 25,
-    top: "12%",
-    fontWeight: "700",
-  },
-  kg: {
-    position: "absolute",
-    left: "89%",
-    fontSize: 25,
-    top: "12%",
-    fontWeight: "700",
-  },
-  setsReps: {
-    position: "absolute",
-    left: "5%",
-    top: "67%",
     fontSize: 22,
-    fontWeight: "700",
+    fontWeight: "600",
   },
-  bottomSheetView: {
-    backgroundColor: "#fff",
+
+  bottomSheetContainer: {
     width: "100%",
-    height: 300,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 30,
+    height: 230,
+    borderRadius: 15,
+    backgroundColor: "white",
+    paddingTop: 30,
   },
   button: {
     width: 220,
@@ -194,5 +234,41 @@ const styles = StyleSheet.create({
   textButton: {
     color: "white",
     fontWeight: "bold",
+  },
+  nameContainer: {
+    flex: 0.5,
+    justifyContent: "center",
+    paddingHorizontal: 15,
+  },
+  detailsContainer: {
+    flex: 0.5,
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  detailsColumn: {
+    justifyContent: "space-evenly",
+    alignItems: "center",
+  },
+  units: {
+    textAlign: "center",
+    marginVertical: 4,
+    fontSize: 15,
+  },
+  details: {
+    textAlign: "center",
+    marginVertical: 4,
+    fontSize: 23,
+    fontWeight: "600",
+  },
+
+  bottomSheetButton: {
+    flexDirection: "row",
+    paddingHorizontal: 10,
+    alignItems: "center",
+    marginHorizontal: 20,
+    marginBottom: 20,
+    borderBottomWidth: 1,
+    paddingBottom: 17,
+    borderColor: "#e6e6e6",
   },
 });

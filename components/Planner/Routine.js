@@ -21,7 +21,7 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import WorkoutDetails from "./WorkoutDetails";
-import update from "../../assets/update.png";
+import { EvilIcons } from "@expo/vector-icons";
 
 function Routine({ date, modal }) {
   const user = auth.currentUser;
@@ -33,22 +33,23 @@ function Routine({ date, modal }) {
   const [items, setItems] = useState([]);
   const [refresh, setRefresh] = useState(false);
 
-  const func = async () => {
-    if (date === undefined) {
-      console.log("no date selected");
-    }
-    try {
-      const q = date && query(routineCol, where("date", "==", date));
-      const data = await getDocs(q);
-      setItems(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
+  const q = date && query(routineCol, where("date", "==", date));
 
+  const realtime = () => {
+    date &&
+      onSnapshot(
+        routineCol,
+        (snapshot) => {
+          setItems(
+            snapshot?.docs.map((doc) => ({ ...doc?.data(), id: doc.id }))
+          );
+        },
+        []
+      );
+  };
   useEffect(() => {
-    func();
-  }, [date, modal, refresh]);
+    return realtime;
+  }, [refresh, date, modal]);
 
   const handleRefresh = () => {
     setRefresh(!refresh);
@@ -57,6 +58,27 @@ function Routine({ date, modal }) {
   return (
     <>
       <View style={styles.container}>
+<<<<<<< HEAD:Screens/Planner/Routine.js
+        <FlatList
+          data={items}
+          renderItem={(data) => {
+            if (data?.item.date === date) {
+              return (
+                <WorkoutDetails
+                  date={date}
+                  name={data?.item.details?.name}
+                  weight={data?.item.details?.weight}
+                  sets={data?.item.details?.sets}
+                  reps={data?.item.details?.reps}
+                  id={data?.item.id}
+                  isDone={data?.item.details?.isDone}
+                />
+              );
+            }
+          }}
+          showsVerticalScrollIndicator={false}
+        />
+=======
         {items.length === 0 ? (
           <View
             style={{
@@ -85,12 +107,13 @@ function Routine({ date, modal }) {
             showsVerticalScrollIndicator={false}
           />
         )}
+>>>>>>> master:components/Planner/Routine.js
       </View>
       <TouchableOpacity
-        style={{ position: "absolute", top: "93%", left: "68%" }}
+        style={{ position: "absolute", top: "96%", left: "70%" }}
         onPress={handleRefresh}
       >
-        <Image source={update} style={{ width: 100, height: 100 }} />
+        <EvilIcons name="refresh" size={90} color="black" />
       </TouchableOpacity>
     </>
   );

@@ -1,18 +1,32 @@
 import { StatusBar } from "expo-status-bar";
-import { Image, ImagePickerIOS, KeyboardAvoidingView, Modal, PermissionsAndroid, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import {Component, useState} from 'react';
-import Log from "../components/Log"; 
-import * as ImagePicker from 'expo-image-picker';
-import Constants from 'expo-constants';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import {
+  Image,
+  ImagePickerIOS,
+  KeyboardAvoidingView,
+  Modal,
+  PermissionsAndroid,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  SafeAreaView,
+} from "react-native";
+import { Component, useState } from "react";
+import Log from "../components/ProgressTracker/Log";
+import * as ImagePicker from "expo-image-picker";
+import Constants from "expo-constants";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 function ProgressTracker() {
-  const [logEntryScreen, setLogEntryScreen] = useState(false)
+  const [logEntryScreen, setLogEntryScreen] = useState(false);
   const [image, setImage] = useState(null);
   const [memo, setMemo] = useState(null);
   const [progressionLog, setProgressionLog] = useState([]);
   const [viewLogOn, setViewLogOn] = useState(false);
-  const [viewLog, setViewLog] = useState(null)
+  const [viewLog, setViewLog] = useState(null);
 
   const toggleEntryScreen = () => setLogEntryScreen(!logEntryScreen);
   const toggleViewLog = () => setViewLogOn(!viewLogOn);
@@ -21,95 +35,127 @@ function ProgressTracker() {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [2,3.5],
-      quality: 1  
-    })
-    if (!result.cancelled){
-      setImage(result.uri)  
+      aspect: [2, 3.5],
+      quality: 1,
+    });
+    if (!result.cancelled) {
+      setImage(result.uri);
     }
-  }
+  };
 
   const addProgressionLog = (logPhoto, logMemo) => {
     var date = new Date().getDate();
     var month = new Date().getMonth() + 1;
     var year = new Date().getFullYear();
-    var logDate = date + '-' + month + '-' + year;
-    setProgressionLog([{date: logDate, photo: logPhoto, memo: logMemo}, ...progressionLog])
-  }
+    var logDate = date + "-" + month + "-" + year;
+    setProgressionLog([
+      { date: logDate, photo: logPhoto, memo: logMemo },
+      ...progressionLog,
+    ]);
+  };
 
   const openViewLog = (logRecord) => setViewLog(logRecord);
 
   return (
-    <View style={styles.container}>
-      <Modal
-      visible = {logEntryScreen}
-      animationType = {'slide'}
-      >
-        <ScrollView>
+    <SafeAreaView style={styles.container}>
+      <Modal visible={logEntryScreen} animationType={"slide"}>
+        <ScrollView style={{ marginTop: 40 }}>
           <KeyboardAvoidingView>
-            <View style = {styles.entryScreenHeader}>
-              <Text style = {styles.entryScreenHeading}>New Progression Entry</Text>
+            <View style={styles.entryScreenHeader}>
+              <Text style={styles.entryScreenHeading}>
+                New Progression Entry
+              </Text>
             </View>
-            <View style = {styles.entryScreen}>
-              <View style = {{alignItems: "center"}}>
-                {image && <Image source={{uri:image}} style = {{height:350, width:200}} />}
-                <TouchableOpacity style = {styles.selectImage} onPress = {onImageAdd}>
+            <View style={styles.entryScreen}>
+              <View style={{ alignItems: "center" }}>
+                {image && (
+                  <Image
+                    source={{ uri: image }}
+                    style={{ height: 350, width: 200 }}
+                  />
+                )}
+                <TouchableOpacity
+                  style={styles.selectImage}
+                  onPress={onImageAdd}
+                >
                   <View>
-                    <Text style = {{color: "#fff", fontSize: 15}}>Add Photo</Text>
+                    <Text style={{ color: "#fff", fontSize: 15 }}>
+                      Add Photo
+                    </Text>
                   </View>
                 </TouchableOpacity>
               </View>
-              <TextInput style={styles.input} placeholder ={'Enter Memo'} multiline = {true} value ={memo} onChangeText = { text => setMemo(text)}/>
-              <TouchableOpacity style = {styles.addEntryButton} onPress = {() => {toggleEntryScreen(); addProgressionLog(image, memo);}}>
+              <TextInput
+                style={styles.input}
+                placeholder={"Enter Memo"}
+                multiline={true}
+                value={memo}
+                onChangeText={(text) => setMemo(text)}
+              />
+              <TouchableOpacity
+                style={styles.addEntryButton}
+                onPress={() => {
+                  toggleEntryScreen();
+                  addProgressionLog(image, memo);
+                }}
+              >
                 <View>
-                  <Text style = {styles.addEntryText}>Add Entry</Text>
+                  <Text style={styles.addEntryText}>Add Entry</Text>
                 </View>
-              </TouchableOpacity> 
-            </View> 
+              </TouchableOpacity>
+            </View>
           </KeyboardAvoidingView>
         </ScrollView>
       </Modal>
 
-      <Modal
-      visible = {viewLogOn}
-      animationType = {'slide'}
-      >
-        <View style={styles.container}>
+      <Modal visible={viewLogOn} animationType={"slide"}>
+        <SafeAreaView style={styles.container}>
           <View style={styles.viewLogHeader}>
             <TouchableOpacity onPress={() => toggleViewLog()}>
               <View style={styles.backButton}>
-                <Text style ={styles.backText}>Back</Text>
+                <Text style={styles.backText}>Back</Text>
               </View>
             </TouchableOpacity>
-            {viewLog && <Text style = {styles.viewLogScreenHeading}>Progression Log on {viewLog.date}</Text>}
+            {viewLog && (
+              <Text style={styles.viewLogScreenHeading}>
+                Progression Log on {viewLog.date}
+              </Text>
+            )}
           </View>
 
-          <View style = {styles.viewLogScreen}>
-            <View style = {styles.photoContainer}>
-              {viewLog && <Image source={{uri:image}} style = {styles.viewLogPhoto} />}
+          <View style={styles.viewLogScreen}>
+            <View style={styles.photoContainer}>
+              {viewLog && (
+                <Image source={{ uri: image }} style={styles.viewLogPhoto} />
+              )}
             </View>
-            <View style = {styles.memoContainer}>
+            <View style={styles.memoContainer}>
               {viewLog && <Text>{viewLog.memo}</Text>}
             </View>
           </View>
-
-        </View>
+        </SafeAreaView>
       </Modal>
 
-      <ScrollView style = {styles.LogScreen}>
-        {
-          progressionLog.map((item) => {
-            return <TouchableOpacity onPress ={() => {openViewLog(item); toggleViewLog()}}><Log key={item} date = {item.date} memo = {item.memo} /></TouchableOpacity>
-          })
-        }
+      <ScrollView style={styles.LogScreen}>
+        {progressionLog.map((item) => {
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                openViewLog(item);
+                toggleViewLog();
+              }}
+            >
+              <Log key={item} date={item.date} memo={item.memo} />
+            </TouchableOpacity>
+          );
+        })}
       </ScrollView>
-      <TouchableOpacity style = {styles.button} onPress = {toggleEntryScreen}>
-        <View style= {styles.addButton}>
-          <Text style = {styles.plus}>+</Text>
+      <TouchableOpacity style={styles.button} onPress={toggleEntryScreen}>
+        <View style={styles.addButton}>
+          <Text style={styles.plus}>+</Text>
         </View>
       </TouchableOpacity>
-    </View>
-    
+    </SafeAreaView>
   );
 }
 
@@ -129,11 +175,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     bottom: 40,
-    left: 40
+    left: 40,
   },
   plus: {
     fontSize: 40,
-    color: "#fff"
+    color: "#fff",
   },
   button: {
     position: "absolute",
@@ -145,14 +191,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#CC0000",
     alignItems: "center",
     justifyContent: "center",
-    padding: 10
+    padding: 10,
   },
   entryScreen: {
     flex: 6,
     alignItems: "center",
     justifyContent: "space-evenly",
     padding: 20,
-    margin: 20
+    margin: 20,
   },
   addEntryButton: {
     backgroundColor: "#CC0000",
@@ -160,15 +206,15 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   addEntryText: {
     color: "#fff",
-    fontSize: 25
+    fontSize: 25,
   },
   entryScreenHeading: {
     fontSize: 27,
-    color: "#fff"
+    color: "#fff",
   },
   selectImage: {
     width: 100,
@@ -177,7 +223,7 @@ const styles = StyleSheet.create({
     top: 10,
     backgroundColor: "#CC0000",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   input: {
     backgroundColor: "#bababa",
@@ -187,9 +233,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#949191",
     padding: 10,
-    margin: 30
+    margin: 30,
   },
-  selectDate:{
+  selectDate: {
     backgroundColor: "#CC0000",
     width: 200,
     height: 50,
@@ -202,32 +248,32 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   viewLogPhoto: {
-    height:350, 
-    width:200
+    height: 350,
+    width: 200,
   },
   viewLogHeader: {
     flex: 0.5,
     backgroundColor: "#CC0000",
     justifyContent: "center",
     alignItems: "center",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   backButton: {
     position: "absolute",
-    left: -180
+    left: -180,
   },
   backText: {
-    color: "#fff", 
-    fontSize: 15
+    color: "#fff",
+    fontSize: 15,
   },
-  viewLogScreenHeading:{
+  viewLogScreenHeading: {
     fontSize: 17,
-    color: "#fff"
+    color: "#fff",
   },
-  photoContainer:{
+  photoContainer: {
     flex: 1.5,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   memoContainer: {
     flex: 1,
@@ -237,7 +283,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#D3D3D3",
     padding: 10,
     margin: 20,
-    bottom: 20
+    bottom: 20,
   },
 });
 
