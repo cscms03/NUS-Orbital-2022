@@ -8,7 +8,6 @@ import ProgressTracker from "./ProgressTracker";
 import TimeScreen from "./TimeScreen";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Planner from "./Planner/Planner";
-import PlannerUpdate from "./Planner/PlannerUpdate";
 
 export default function MainScreen() {
   const Tab = createBottomTabNavigator();

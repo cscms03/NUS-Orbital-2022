@@ -6,12 +6,8 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import SolidButton from "../Authentication/SolidButton";
 import { updateDoc, doc, deleteDoc } from "firebase/firestore";
 import { db, auth } from "../../firebase";
-<<<<<<< HEAD:Screens/Planner/WorkoutDetails.js
-import EditRoutine from "./EditRoutine";
 import { Ionicons, Entypo, AntDesign, MaterialIcons } from "@expo/vector-icons";
-=======
 import EditRoutine from "../../Screens/Planner/EditRoutine";
->>>>>>> master:components/Planner/WorkoutDetails.js
 
 function WorkoutDetails({ date, name, weight, sets, reps, id, isDone }) {
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
