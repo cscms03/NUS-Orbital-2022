@@ -8,11 +8,11 @@ import {
   FlatList,
   Alert,
   Image,
+  Dimensions,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
+import { Entypo } from "@expo/vector-icons";
 import {
   doc,
-  onSnapshot,
   collection,
   getDocs,
   query,
@@ -58,6 +58,7 @@ function Routine({ date, modal }) {
   return (
     <>
       <View style={styles.container}>
+<<<<<<< HEAD:Screens/Planner/Routine.js
         <FlatList
           data={items}
           renderItem={(data) => {
@@ -77,6 +78,36 @@ function Routine({ date, modal }) {
           }}
           showsVerticalScrollIndicator={false}
         />
+=======
+        {items.length === 0 ? (
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              height: Dimensions.get("screen").height * 0.5,
+            }}
+          >
+            <Entypo name="progress-empty" size={170} color="grey" />
+            <Text style={{ color: "grey" }}>Empty!</Text>
+          </View>
+        ) : (
+          <FlatList
+            data={items}
+            renderItem={(data) => (
+              <WorkoutDetails
+                date={date}
+                name={data?.item.details?.name}
+                weight={data?.item.details?.weight}
+                sets={data?.item.details?.sets}
+                reps={data?.item.details?.reps}
+                id={data?.item.id}
+                isDone={data?.item.details?.isDone}
+              />
+            )}
+            showsVerticalScrollIndicator={false}
+          />
+        )}
+>>>>>>> master:components/Planner/Routine.js
       </View>
       <TouchableOpacity
         style={{ position: "absolute", top: "96%", left: "70%" }}
@@ -92,9 +123,9 @@ export default Routine;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    //   width: Dimensions.get("window").width * 0.96,
     width: "100%",
-    height: 100,
+    height: "100%",
     margin: 20,
     // backgroundColor: "#f2f2f2",
     borderRadius: 10,

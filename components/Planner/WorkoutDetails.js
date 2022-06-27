@@ -3,11 +3,15 @@ import { View, Text, StyleSheet, Modal, Alert } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { BottomSheet } from "react-native-btr";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import SolidButton from "../../components/Authentication/SolidButton";
+import SolidButton from "../Authentication/SolidButton";
 import { updateDoc, doc, deleteDoc } from "firebase/firestore";
 import { db, auth } from "../../firebase";
+<<<<<<< HEAD:Screens/Planner/WorkoutDetails.js
 import EditRoutine from "./EditRoutine";
 import { Ionicons, Entypo, AntDesign, MaterialIcons } from "@expo/vector-icons";
+=======
+import EditRoutine from "../../Screens/Planner/EditRoutine";
+>>>>>>> master:components/Planner/WorkoutDetails.js
 
 function WorkoutDetails({ date, name, weight, sets, reps, id, isDone }) {
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
@@ -26,10 +30,10 @@ function WorkoutDetails({ date, name, weight, sets, reps, id, isDone }) {
     const document = doc(db, "users/" + uid + "/routine", id);
     await updateDoc(document, {
       details: {
-        name,
-        weight,
-        sets,
-        reps,
+        // name,
+        // weight,
+        // sets,
+        // reps,
         isDone: !isDoneState,
       },
     });

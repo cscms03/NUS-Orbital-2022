@@ -3,7 +3,7 @@ import { StyleSheet, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "./HomeScreen";
-import DietTracker from "./DietTracker";
+import DietTracker from "./DietTracker/DietTracker";
 import ProgressTracker from "./ProgressTracker";
 import TimeScreen from "./TimeScreen";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -50,6 +50,11 @@ export default function MainScreen() {
         /> */}
 
         <Tab.Screen
+          name="Diet"
+          component={DietTracker}
+          options={{ headerShown: false }}
+        />
+        <Tab.Screen
           name="Planner"
           component={Planner}
           options={{ headerShown: false }}
@@ -62,13 +67,9 @@ export default function MainScreen() {
         <Tab.Screen
           name="Home"
           component={HomeScreen}
-          options={{ headerShown: false }}
+          options={{ headerShown: true }}
         />
-        <Tab.Screen
-          name="Diet"
-          component={DietTracker}
-          options={{ headerShown: false }}
-        />
+
         <Tab.Screen
           name="Progress"
           component={ProgressTracker}
