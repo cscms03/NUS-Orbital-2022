@@ -5,6 +5,7 @@ import Log from "../components/Log";
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import store from "../redux/store";
 
 function ProgressTracker() {
   const [logEntryScreen, setLogEntryScreen] = useState(false)
@@ -16,6 +17,23 @@ function ProgressTracker() {
 
   const toggleEntryScreen = () => setLogEntryScreen(!logEntryScreen);
   const toggleViewLog = () => setViewLogOn(!viewLogOn);
+
+  store.dispatch({
+    type: "progressionLogAdded",
+    payload: {
+      logPhoto: null,
+      logMemo: 'abc' 
+    }
+  })
+
+  store.dispatch({
+    type: "progressionLogRemoved",
+    payload: {
+      id: 1
+    }
+  })
+  
+  console.log(store.getState());
 
   const onImageAdd = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
