@@ -18,7 +18,7 @@ export default function reducer(state = [], action) {
       ...state
     ];
 
-  else if (action === actions.progressionLogRemoved)
+  else if (action.type === actions.progressionLogRemoved)
     return state.filter(progressionLog => progressionLog.id !== action.payload.id);
   
   return state;

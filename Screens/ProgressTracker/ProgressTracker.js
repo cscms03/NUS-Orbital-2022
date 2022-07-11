@@ -2,7 +2,6 @@ import { Image, KeyboardAvoidingView, Modal, ScrollView, StyleSheet, Text, TextI
 import { useState } from 'react';
 import Log from "../../components/Log"; 
 import store from "../../redux/store";
-// import {progressionLogAdded} from '../../redux/actions.js';
 import AddProgressionLog from "./AddProgressionLog";
 import ViewProgressionLog from "./ViewProgressionLog";
 
@@ -10,29 +9,16 @@ function ProgressTracker() {
   const [enterLogOn, setEnterLogOn] = useState(false);
   const [viewLogOn, setViewLogOn] = useState(false);
   const [viewLog, setViewLog] = useState(null)
-  const [image, setImage] = useState(null);
-  const [memo, setMemo] = useState(null);
-
+  const [removed, setRemoved] = useState(true);
+  
+  const LogRemoved = () => setRemoved(!removed);
   const toggleEntryScreen = () => setEnterLogOn(!enterLogOn);
   const toggleViewLog = () => setViewLogOn(!viewLogOn);
-
-  var logExisting = false;
-  if (store.getState() === []){
-    logExisting = false
-  }
-  else{
-    logExisting = true
-  }
-
-  // const addProgressionLog = (logPhoto, logMemo) => {
-  //   var date = new Date().getDate();
-  //   var month = new Date().getMonth() + 1;
-  //   var year = new Date().getFullYear();
-  //   var logDate = date + '-' + month + '-' + year;
-  //   setProgressionLog([{date: logDate, photo: logPhoto, memo: logMemo}, ...progressionLog])
-  // }
-
   const openViewLog = (logRecord) => setViewLog(logRecord);
+
+  store.subscribe(() => {
+    console.log("Entry Changed", store.getState())
+  })
 
   return (
     <View style={styles.container}>
@@ -53,7 +39,7 @@ function ProgressTracker() {
       <ScrollView style = {styles.LogScreen}>
 
           {store.getState().map((item) => {
-            return <TouchableOpacity onPress ={() => {openViewLog(item); toggleViewLog()}}><Log key={item.id} date = {item.logDate}/></TouchableOpacity>
+            return <TouchableOpacity onPress ={() => {openViewLog(item); toggleViewLog()}}><Log logInfo = {item} date = {item.logDate} toggle = {LogRemoved} /></TouchableOpacity>
           })}
         
       </ScrollView>

@@ -4,7 +4,6 @@ import store from "../../redux/store";
 import {progressionLogAdded} from '../../redux/actions.js';
 import { Image, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
-
 function AddProgressionLog (prop) {
   const [image, setImage] = useState(null);
   const [memo, setMemo] = useState(null);
@@ -26,6 +25,7 @@ function AddProgressionLog (prop) {
     setMemo('');
     setImage(null);
   }
+
   return(
     <ScrollView>
       <KeyboardAvoidingView>
@@ -42,11 +42,18 @@ function AddProgressionLog (prop) {
             </TouchableOpacity>
           </View>
           <TextInput style={styles.input} placeholder ={'Enter Memo'} multiline = {true} value ={memo} onChangeText = { text => setMemo(text)}/>
-          <TouchableOpacity style = {styles.addEntryButton} onPress = {() => {prop.toggleScreen(); onLogAdd();}}>
-            <View>
-              <Text style = {styles.addEntryText}>Add Entry</Text>
-            </View>
-          </TouchableOpacity> 
+          <View style = {{flexDirection: "row"}}>
+            <TouchableOpacity style = {styles.addEntryButton} onPress = {() => {prop.toggleScreen(); onLogAdd();}}>
+              <View>
+                <Text style = {styles.addEntryText}>Add Entry</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity style = {styles.addEntryButton} onPress = {() => {prop.toggleScreen()}}>
+              <View>
+                <Text style = {styles.addEntryText}>Cancel</Text>
+              </View>
+            </TouchableOpacity> 
+          </View>
         </View> 
       </KeyboardAvoidingView>
     </ScrollView>
@@ -57,6 +64,7 @@ const styles = StyleSheet.create({
   entryScreenHeader: {
     flex: 1,
     backgroundColor: "#CC0000",
+    flexDirection: 'row',
     alignItems: "center",
     justifyContent: "center",
     padding: 10
@@ -70,11 +78,12 @@ const styles = StyleSheet.create({
   },
   addEntryButton: {
     backgroundColor: "#CC0000",
-    width: 200,
-    height: 50,
+    width: 150,
+    height: 45,
     borderRadius: 25,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    margin: 10
   },
   addEntryText: {
     color: "#fff",
@@ -102,7 +111,7 @@ const styles = StyleSheet.create({
     borderColor: "#949191",
     padding: 10,
     margin: 30
-  }
+  },
 });
 
 export default AddProgressionLog;
