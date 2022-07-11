@@ -4,7 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "./HomeScreen";
 import DietTracker from "./DietTracker";
-import ProgressTracker from "./ProgressTracker";
+import ProgressTracker from "./ProgressTracker/ProgressTracker";
 import TimeScreen from "./TimeScreen";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Planner from "./Planner/Planner";

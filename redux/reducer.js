@@ -9,13 +9,13 @@ var dateAdded = date + '-' + month + '-' + year;
 export default function reducer(state = [], action) {
   if (action.type === actions.progressionLogAdded)
     return [
-      ...state, 
       {
         id: ++lastId,
         logDate: dateAdded,
         logPhoto: action.payload.logPhoto,
         logMemo:  action.payload.logMemo
-      }
+      },
+      ...state
     ];
 
   else if (action === actions.progressionLogRemoved)
