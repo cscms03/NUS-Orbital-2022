@@ -6,32 +6,27 @@ import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import store from "../redux/store";
+import * as actions from '../redux/actionTypes';
+import {progressionLogAdded} from '../redux/actions.js';
 
 function ProgressTracker() {
   const [logEntryScreen, setLogEntryScreen] = useState(false)
   const [image, setImage] = useState(null);
   const [memo, setMemo] = useState(null);
-  const [progressionLog, setProgressionLog] = useState([]);
+  // const [progressionLog, setProgressionLog] = useState([]);
   const [viewLogOn, setViewLogOn] = useState(false);
   const [viewLog, setViewLog] = useState(null)
 
   const toggleEntryScreen = () => setLogEntryScreen(!logEntryScreen);
   const toggleViewLog = () => setViewLogOn(!viewLogOn);
 
-  store.dispatch({
-    type: "progressionLogAdded",
-    payload: {
-      logPhoto: null,
-      logMemo: 'abc' 
-    }
-  })
-
-  store.dispatch({
-    type: "progressionLogRemoved",
-    payload: {
-      id: 1
-    }
-  })
+  var logExisting = false;
+  if (store.getState() === []){
+    logExisting = false
+  }
+  else{
+    logExisting = true
+  }
   
   console.log(store.getState());
 
@@ -43,17 +38,23 @@ function ProgressTracker() {
       quality: 1  
     })
     if (!result.cancelled){
-      setImage(result.uri)  
+      setImage(result.uri)
     }
   }
 
-  const addProgressionLog = (logPhoto, logMemo) => {
-    var date = new Date().getDate();
-    var month = new Date().getMonth() + 1;
-    var year = new Date().getFullYear();
-    var logDate = date + '-' + month + '-' + year;
-    setProgressionLog([{date: logDate, photo: logPhoto, memo: logMemo}, ...progressionLog])
+  const onLogAdd = () => {
+    store.dispatch(progressionLogAdded(image, memo));
+    setMemo('');
+    setImage(null);
   }
+
+  // const addProgressionLog = (logPhoto, logMemo) => {
+  //   var date = new Date().getDate();
+  //   var month = new Date().getMonth() + 1;
+  //   var year = new Date().getFullYear();
+  //   var logDate = date + '-' + month + '-' + year;
+  //   setProgressionLog([{date: logDate, photo: logPhoto, memo: logMemo}, ...progressionLog])
+  // }
 
   const openViewLog = (logRecord) => setViewLog(logRecord);
 
@@ -78,7 +79,7 @@ function ProgressTracker() {
                 </TouchableOpacity>
               </View>
               <TextInput style={styles.input} placeholder ={'Enter Memo'} multiline = {true} value ={memo} onChangeText = { text => setMemo(text)}/>
-              <TouchableOpacity style = {styles.addEntryButton} onPress = {() => {toggleEntryScreen(); addProgressionLog(image, memo);}}>
+              <TouchableOpacity style = {styles.addEntryButton} onPress = {() => {toggleEntryScreen(); onLogAdd();}}>
                 <View>
                   <Text style = {styles.addEntryText}>Add Entry</Text>
                 </View>
@@ -104,7 +105,7 @@ function ProgressTracker() {
 
           <View style = {styles.viewLogScreen}>
             <View style = {styles.photoContainer}>
-              {viewLog && <Image source={{uri:image}} style = {styles.viewLogPhoto} />}
+              {image && <Image source={{uri:image}} style = {styles.viewLogPhoto} />}
             </View>
             <View style = {styles.memoContainer}>
               {viewLog && <Text>{viewLog.memo}</Text>}
@@ -115,11 +116,11 @@ function ProgressTracker() {
       </Modal>
 
       <ScrollView style = {styles.LogScreen}>
-        {
-          progressionLog.map((item) => {
+
+          {store.getState().map((item) => {
             return <TouchableOpacity onPress ={() => {openViewLog(item); toggleViewLog()}}><Log key={item} date = {item.date} memo = {item.memo} /></TouchableOpacity>
-          })
-        }
+          })}
+        
       </ScrollView>
       <TouchableOpacity style = {styles.button} onPress = {toggleEntryScreen}>
         <View style= {styles.addButton}>

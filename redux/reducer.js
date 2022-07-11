@@ -1,3 +1,5 @@
+import * as actions from './actionTypes'
+
 let lastId = 0;
 var date = new Date().getDate();
 var month = new Date().getMonth() + 1;
@@ -5,7 +7,7 @@ var year = new Date().getFullYear();
 var dateAdded = date + '-' + month + '-' + year;
 
 export default function reducer(state = [], action) {
-  if (action.type === 'progressionLogAdded')
+  if (action.type === actions.progressionLogAdded)
     return [
       ...state, 
       {
@@ -16,7 +18,7 @@ export default function reducer(state = [], action) {
       }
     ];
 
-  else if (action === 'progresionLogRemoved')
+  else if (action === actions.progressionLogRemoved)
     return state.filter(progressionLog => progressionLog.id !== action.payload.id);
   
   return state;
