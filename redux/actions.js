@@ -18,3 +18,14 @@ export function progressionLogRemoved(id) {
         }
     };
 }
+
+export function progressionLogEdited(log, newPhoto, newMemo) {
+    return {
+        type: actions.progressionLogEdited,
+        payload: {
+            oriLogInfo: log,
+            logPhoto: newPhoto,
+            logMemo: newMemo
+        }
+    };
+}
