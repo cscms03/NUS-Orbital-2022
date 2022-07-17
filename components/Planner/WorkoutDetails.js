@@ -22,18 +22,23 @@ function WorkoutDetails({ date, name, weight, sets, reps, id, isDone }) {
   };
 
   const handleIsDonePress = async () => {
-    setIsDoneState(!isDoneState);
-    const document = doc(db, "users/" + uid + "/routine", id);
-    await updateDoc(document, {
-      details: {
-        // name,
-        // weight,
-        // sets,
-        // reps,
-        isDone: !isDoneState,
-      },
-    });
-    setBottomSheetVisible(!bottomSheetVisible);
+    try {
+      setIsDoneState(!isDoneState);
+      const document = doc(db, "users/" + uid + "/routine", id);
+      await updateDoc(document, {
+        details: {
+          name,
+          weight,
+          sets,
+          reps,
+          isDone: !isDoneState,
+        },
+      });
+    } catch (error) {
+      Alert.alert(error.code, error.message);
+    } finally {
+      setBottomSheetVisible(!bottomSheetVisible);
+    }
   };
   const handleEditPress = () => {
     setModalVisible((prev) => !prev);
@@ -50,19 +55,11 @@ function WorkoutDetails({ date, name, weight, sets, reps, id, isDone }) {
     }
   };
 
-  // //cleanup
-  // useEffect(() => {
-  //   return () => {
-  //     setBottomSheetVisible(false);
-  //     setModalVisible(false);
-  //   };
-  // });
-
   return (
     <View
       style={[
         styles.planContainer,
-        { backgroundColor: isDoneState ? "#6f6" : "#fff" },
+        { backgroundColor: isDoneState ? "#9f9" : "#fff" },
       ]}
     >
       <TouchableOpacity onPress={handleItemPress}>
@@ -194,10 +191,10 @@ export default WorkoutDetails;
 const styles = StyleSheet.create({
   planContainer: {
     width: "100%",
-    marginBottom: 10,
+    marginBottom: 6,
     borderColor: "#d9d9d9",
     borderWidth: 1,
-    borderRadius: 20,
+    borderRadius: 15,
   },
   con: {
     width: "100%",
@@ -249,6 +246,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginVertical: 4,
     fontSize: 15,
+    color: "#b30000",
+    fontWeight: "500",
   },
   details: {
     textAlign: "center",

@@ -2,12 +2,13 @@ import React, { useEffect, useRef } from "react";
 import { StyleSheet, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import HomeScreen from "./HomeScreen";
+import Profile from "./Profile/ProfileScreen";
 import DietTracker from "./DietTracker/DietTracker";
 import ProgressTracker from "./ProgressTracker";
 import TimeScreen from "./TimeScreen";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Planner from "./Planner/Planner";
+import ProfileStack from "./Profile/ProfileStack";
 
 export default function MainScreen() {
   const Tab = createBottomTabNavigator();
@@ -19,8 +20,8 @@ export default function MainScreen() {
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 
-            if (route.name === "Home") {
-              iconName = "md-home";
+            if (route.name === "Profile") {
+              iconName = "md-person";
             } else if (route.name === "Time") {
               iconName = "ios-timer";
             } else if (route.name === "Planner") {
@@ -42,12 +43,6 @@ export default function MainScreen() {
           headerTintColor: "white",
         })}
       >
-        {/* <Tab.Screen
-          name="PlannerUpdate"
-          component={PlannerUpdate}
-          options={{ headerShown: false }}
-        /> */}
-
         <Tab.Screen
           name="Diet"
           component={DietTracker}
@@ -64,9 +59,9 @@ export default function MainScreen() {
           options={{ headerShown: true }}
         />
         <Tab.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{ headerShown: true }}
+          name="Profile"
+          component={ProfileStack}
+          options={{ headerShown: false }}
         />
 
         <Tab.Screen

@@ -27,11 +27,9 @@ function SignUpScreen({ navigation }) {
     handleSubmit,
     formState: { errors },
     watch,
-    getValues,
   } = useForm();
 
   const pwd = watch("password");
-  const [loading, setLoading] = useState(false);
   const email = watch("Email");
   const password = watch("password");
 
@@ -54,14 +52,14 @@ function SignUpScreen({ navigation }) {
         const uid = user.uid;
 
         doc(collection(db, "users/" + uid, "routine"));
-        console.log("doc created");
+        console.log("routine created");
       })
       .then(() => {
         const user = auth.currentUser;
         const uid = user.uid;
 
         doc(collection(db, "users/" + uid, "diet"));
-        console.log("doc2 created");
+        console.log("diet created");
       })
       .catch((error) => {
         const errorCode = error.code;

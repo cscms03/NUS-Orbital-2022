@@ -18,6 +18,7 @@ import {
   query,
   where,
   getDoc,
+  onSnapshot,
 } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import WorkoutDetails from "./WorkoutDetails";
