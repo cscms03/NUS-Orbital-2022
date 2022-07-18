@@ -1,17 +1,20 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, SafeAreaView, Platform } from "react-native";
 import SolidButton from "../../components/Authentication/SolidButton";
-import { auth } from "../../firebase";
 import { signOut } from "firebase/auth";
 import { Header } from "@react-navigation/stack";
 import AccountInfo from "../../components/Profile/AccountInfo";
 import BodyInfo from "../../components/Profile/BodyInfo";
 import SettingButtons from "../../components/Profile/SettingButtons";
 import { Octicons, FontAwesome5 } from "@expo/vector-icons";
+import { doc, onSnapshot } from "firebase/firestore";
+import { auth, db } from "../../firebase";
+import { useEffect, useState } from "react";
 
 const ios = Platform.OS === "ios";
 
 function Profile({ navigation }) {
+  const [items, setItems] = useState([]);
   const handleSignOutPress = async () => {
     signOut(auth)
       .then(() => {
@@ -23,6 +26,17 @@ function Profile({ navigation }) {
   const handleEditProfilePress = () => {
     navigation.navigate("EditProfileScreen");
   };
+
+  const user = auth.currentUser;
+  const uid = user.uid;
+
+  useEffect(
+    () =>
+      onSnapshot(doc(db, "users/" + uid), (snapshot) => {
+        setItems(snapshot.data());
+      }),
+    []
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -38,12 +52,16 @@ function Profile({ navigation }) {
         >
           Profile
         </Text>
-        <AccountInfo />
+        <AccountInfo name={items.name} />
       </View>
 
       <View style={styles.footer}>
         <View style={styles.bodyInfo}>
-          <BodyInfo />
+          <BodyInfo
+            gender={items.gender}
+            age={items.age}
+            weight={items.weight}
+          />
         </View>
 
         <SettingButtons

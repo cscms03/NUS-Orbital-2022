@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { auth } from "../../firebase";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
-function AccountInfo() {
+function AccountInfo({ name }) {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -12,7 +12,7 @@ function AccountInfo() {
       </View>
 
       <View style={styles.textContainer}>
-        <Text style={styles.name}>Placeholder</Text>
+        <Text style={styles.name}>{name}</Text>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <MaterialIcons name="email" size={20} color="white" />
           <Text style={styles.email}>{auth.currentUser?.email}</Text>

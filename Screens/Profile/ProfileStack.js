@@ -15,7 +15,11 @@ function ProfileStack() {
         component={Profile}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
+      <Stack.Screen
+        name="EditProfileScreen"
+        component={EditProfileScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 }

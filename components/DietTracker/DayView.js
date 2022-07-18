@@ -29,7 +29,6 @@ function DayView({ date }) {
     () =>
       onSnapshot(doc(db, "users/" + uid + "/diet/" + date), (snapshot) => {
         setItem(snapshot.data());
-        console.log(item?.totalProtein);
       }),
     []
   );
