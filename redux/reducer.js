@@ -24,17 +24,6 @@ export default function reducer(state = [], action) {
   else if (action.type === actions.progressionLogEdited)
     return state.map((log) => log.id === action.payload.oriLogInfo.id ? {id: log.id, logDate: log.logDate, logPhoto: action.payload.logPhoto, logMemo: action.payload.logMemo} 
     : log)
-    // [
-
-    //   ...state.splice(0, action.payload.index),
-    //   {
-    //     id: action.payload.oriLogInfo.id,
-    //     logDate: action.payload.oriLogInfo.logDate,
-    //     logPhoto: action.payload.logPhoto,
-    //     logMemo: action.payload.logMemo
-    //   },
-    //   ...state.splice(action.payload.index+1)
-    // ]
   
   return state;
 }

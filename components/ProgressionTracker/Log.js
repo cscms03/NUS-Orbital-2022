@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View, Alert, ShadowPropTypesIOS } from "react-native";
 import { useState } from "react";
-import { progressionLogRemoved } from "../redux/actions.js";
-import store from "../redux/store";
+import { progressionLogRemoved } from "../../redux/actions.js";
+import store from "../../redux/store";
 import Icon from 'react-native-vector-icons/Entypo'
 
 const Log = (props) => {
