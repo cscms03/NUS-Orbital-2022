@@ -6,7 +6,7 @@ import AddProgressionLog from "./AddProgressionLog";
 import ViewProgressionLog from "./ViewProgressionLog";
 import EditProgressionLog from "./EditProgressLog";
 import Icon from 'react-native-vector-icons/Entypo';
-import ImageGallary from "./ImageGallary";
+import ImageGallery from "./ImageGallery";
 
 function ProgressTracker() {
   const [enterLogOn, setEnterLogOn] = useState(false); //toggle for modal of log entry screen
@@ -15,13 +15,13 @@ function ProgressTracker() {
   const [removed, setRemoved] = useState(true); //used to rerender the screen when log is removed
   const [editLogInfo, setEditLogInfo] = useState(null); //stores info of log to edit
   const [editLogOn, setEditLogOn] = useState(false); //toggle for modal of log edit screen
-  const [gallaryOn, setGallaryOn] = useState(false); //toggle for modal of log gallary screen
+  const [galleryOn, setGalleryOn] = useState(false); //toggle for modal of log gallery screen
   
   const LogRemoved = () => setRemoved(!removed);
   const toggleEntryScreen = () => setEnterLogOn(!enterLogOn);
   const toggleViewLog = () => setViewLogOn(!viewLogOn);
   const toggleEditLog = () => setEditLogOn(!editLogOn);
-  const toggleGallary = () => setGallaryOn(!gallaryOn);
+  const toggleGallery = () => setGalleryOn(!galleryOn);
   const openViewLog = (logRecord) => setViewLog(logRecord);
 
   store.subscribe(() => {
@@ -56,12 +56,12 @@ function ProgressTracker() {
         <EditProgressionLog toggleScreen = {toggleEditLog} logInfo = {editLogInfo}/>
       </Modal>
 
-      {/* modal for gallary screen*/}
+      {/* modal for gallery screen*/}
       <Modal
-        visible = {gallaryOn}
+        visible = {galleryOn}
         animationType = {'slide'}
       >
-          <ImageGallary toggleScreen ={toggleGallary}/>
+          <ImageGallery toggleScreen ={toggleGallery}/>
       </Modal>
 
       {/* scrollview for log entries, mainscreen */}
@@ -83,8 +83,8 @@ function ProgressTracker() {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style = {styles.button} onPress = {toggleGallary}>
-        <View style = {styles.gallaryButton}>
+      <TouchableOpacity style = {styles.button} onPress = {toggleGallery}>
+        <View style = {styles.galleryButton}>
           <Icon name="documents" size={25} color="#fff"/>
         </View>
       </TouchableOpacity>
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     right: 70,
     bottom: 0,
   },
-  gallaryButton: {
+  galleryButton: {
     width: 60,
     height: 60,
     borderRadius: 60,

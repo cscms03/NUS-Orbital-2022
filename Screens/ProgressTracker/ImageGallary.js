@@ -5,7 +5,7 @@ import ImageCarousel, { SLIDER_WIDTH, ITEM_WIDTH } from '../../components/Progre
 import Icon from 'react-native-vector-icons/Entypo'
 import store from "../../redux/store"
 
-function ImageGallary (props) {
+function ImageGallery (props) {
   const isCarousel = React.useRef(null)
   const data = store.getState()
 
@@ -15,7 +15,7 @@ function ImageGallary (props) {
           <TouchableOpacity style = {styles.backButton} onPress ={() => props.toggleScreen()}>
             <Icon name="chevron-small-left" size={40} color="#fff"/>
           </TouchableOpacity>
-          <Text style = {styles.heading}>Progression Gallary</Text>
+          <Text style = {styles.heading}>Progression Gallery</Text>
         </View>
         <View style = {styles.carousel}>
           <Carousel
@@ -63,5 +63,5 @@ const styles = StyleSheet.create({
   },
 })
 
-export default ImageGallary
+export default ImageGallery
 
