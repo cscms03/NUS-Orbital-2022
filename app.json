@@ -11,13 +11,17 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff",
       "packagerOpts": {
-        "sourceExts": ["cjs"]
+        "sourceExts": [
+          "cjs"
+        ]
       }
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -30,6 +34,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "Healthcare application that helps one inside and outside the gym, simplifying the process of working out and motivating the user to persistently exercise. ",
+    "githubUrl": "https://github.com/cscms03/NUS-Orbital-2022"
   }
 }

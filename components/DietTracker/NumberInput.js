@@ -2,20 +2,11 @@ import React, { Component } from "react";
 import { View, StyleSheet, TextInput, Text } from "react-native";
 import { Controller } from "react-hook-form";
 
-function InputField({
-  placeholder,
-  control,
-  name,
-  secureTextEntry,
-  rules = {},
-  defaultValue,
-}) {
+function NumberInput({ placeholder, name, secureTextEntry, rules = {} }) {
   return (
     <Controller
-      control={control}
       name={name}
       rules={rules}
-      defaultValue={defaultValue || ""}
       render={({
         field: { value, onChange, onBlur },
         fieldState: { error },
@@ -29,11 +20,12 @@ function InputField({
           <View
             style={[
               styles.container,
-              { borderColor: error ? "red" : "#e6e6e6" },
+              { borderColor: error ? "red" : "#e8e8e8" },
             ]}
           >
             <TextInput
               value={value}
+              keyboardType="numeric"
               onChangeText={onChange}
               onBlur={onBlur}
               placeholder={placeholder}
@@ -47,22 +39,21 @@ function InputField({
   );
 }
 
-export default InputField;
+export default NumberInput;
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
-    width: "100%",
-    height: 50,
-    borderWidth: 1.2,
-    borderColor: "#e6e6e6",
-    borderRadius: 20,
+    width: "35%",
+    height: 47,
+    borderColor: "#e8e8e8",
+    borderWidth: 1,
+    borderRadius: 25,
     paddingHorizontal: 10,
     justifyContent: "center",
-    marginVertical: 12,
+    marginVertical: 7,
   },
   input: {
-    alignContent: "center",
-    fontSize: 16,
+    alignContent: "right",
   },
 });

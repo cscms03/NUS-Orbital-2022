@@ -14,10 +14,14 @@ import SolidButton from "../../components/Authentication/SolidButton";
 import TextButton from "../../components/Authentication/TextButton";
 import { useForm, Controller } from "react-hook-form";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+} from "firebase/auth";
 import { auth } from "../../firebase";
 
-const EMAIL_REGEX =
+export const EMAIL_REGEX =
   /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 function SignInScreen({ navigation }) {
@@ -26,11 +30,12 @@ function SignInScreen({ navigation }) {
     handleSubmit,
     formState: { errors },
     getValues,
+    watch,
   } = useForm();
 
   const [loading, setLoading] = useState(false);
-  const email = getValues("Email");
-  const password = getValues("password");
+  const email = watch("Email");
+  const password = watch("password");
 
   const handleCreateAccountPress = () => {
     navigation.navigate("SignUpScreen");

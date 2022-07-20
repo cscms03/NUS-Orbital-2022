@@ -65,9 +65,6 @@ function ProgressTracker() {
       </Modal>
 
       {/* scrollview for log entries, mainscreen */}
-      <View style = {styles.logScreenHeader}>
-        <Text style = {styles.logScreenHeading}>Progression Log Entries</Text>
-      </View>
       <ScrollView style = {styles.LogScreen}>
 
           {store.getState().map((item) => {

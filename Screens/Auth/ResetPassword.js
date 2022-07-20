@@ -6,6 +6,7 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -15,17 +16,33 @@ import SolidButton from "../../components/Authentication/SolidButton";
 import CustomInput from "../../components/Authentication/CustomInput";
 import TextButton from "../../components/Authentication/TextButton";
 import { useForm } from "react-hook-form";
+import { EMAIL_REGEX } from "./SignInScreen";
+import { auth } from "../../firebase";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 function ResetPassword({ navigation }) {
   const {
     control,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm();
 
-  const handleResetPasswordPress = (data) => {
-    navigation.navigate("SigninScreen");
+  const email = watch("Email");
+
+  const handleResetPasswordPress = async (data) => {
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        // Password reset email sent!
+        Alert.alert("Password reset link has been sent to your email");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        Alert.alert(errorCode, errorMessage);
+      });
   };
+
   return (
     <View style={styles.container}>
       <Animatable.View
@@ -45,40 +62,14 @@ function ResetPassword({ navigation }) {
         style={styles.footer}
       >
         <Text style={styles.title}>Reset your password</Text>
-
         <CustomInput
-          name="username"
-          placeholder="Username"
+          name="Email"
+          placeholder="Email"
           control={control}
           secureTextEntry={false}
-          rules={{ required: "Username is required" }}
-        />
-
-        <CustomInput
-          name="new password"
-          placeholder="New password"
-          secureTextEntry={true}
-          control={control}
           rules={{
-            required: "Password is required",
-            minLength: {
-              value: 8,
-              message: "Password should be minimum 8 characters long",
-            },
-          }}
-        />
-
-        <CustomInput
-          name="Confirm new password"
-          placeholder="Confirm new Password"
-          secureTextEntry={true}
-          control={control}
-          rules={{
-            required: "Password confirmation is required",
-            minLength: {
-              value: 8,
-              message: "Password should be minimum 8 characters long",
-            },
+            required: "Email is required",
+            pattern: { value: EMAIL_REGEX, message: "Email is invalid" },
           }}
         />
 

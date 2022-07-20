@@ -32,8 +32,8 @@ function SignUpScreen({ navigation }) {
 
   const pwd = watch("password");
   const [loading, setLoading] = useState(false);
-  const email = getValues("Email");
-  const password = getValues("password");
+  const email = watch("Email");
+  const password = watch("password");
 
   const handleGetStartedPress = async (data) => {
     createUserWithEmailAndPassword(auth, email, password)
@@ -48,7 +48,6 @@ function SignUpScreen({ navigation }) {
         setDoc(doc(db, "users", uid), {
           email: user.email,
         });
-        console.log(db);
       })
       .then(() => {
         const user = auth.currentUser;
@@ -56,6 +55,13 @@ function SignUpScreen({ navigation }) {
 
         doc(collection(db, "users/" + uid, "routine"));
         console.log("doc created");
+      })
+      .then(() => {
+        const user = auth.currentUser;
+        const uid = user.uid;
+
+        doc(collection(db, "users/" + uid, "diet"));
+        console.log("doc2 created");
       })
       .catch((error) => {
         const errorCode = error.code;

@@ -16,7 +16,13 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
 import NumericInput from "react-native-numeric-input";
 import { auth, db } from "../../firebase";
-import { doc, setDoc, addDoc, collection, updateDoc } from "firebase/firestore";
+import {
+  doc,
+  addDoc,
+  collection,
+  updateDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 import update from "../../assets/update.png";
 
 function EditRoutine({
@@ -57,11 +63,11 @@ function EditRoutine({
   };
 
   const handleAddPress = async () => {
-    console.log(name, weight, sets, uid, selectedDate, routineCol);
     try {
       if (selectedDate === undefined) Alert.alert("Please select a date");
       await addDoc(collection(db, userRoutineDoc, "routine"), {
         date: selectedDate,
+        createdAt: serverTimestamp(),
         details: {
           name: name,
           weight: weight,
@@ -85,7 +91,10 @@ function EditRoutine({
   const name = getValues("Workout-Name");
 
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    <TouchableWithoutFeedback
+      onPress={() => Keyboard.dismiss()}
+      style={{ backgroundColor: "#f8f8f8" }}
+    >
       <View style={styles.container}>
         <View style={{ marginBottom: 25 }}>
           <Text style={[styles.label, { marginLeft: 5 }]}>Workout Name</Text>
@@ -101,11 +110,17 @@ function EditRoutine({
           />
         </View>
 
-        <View style={{ marginBottom: 18 }}>
+        <View
+          style={{
+            marginBottom: 18,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
           <Text style={[styles.label, { marginLeft: 10 }]}>Weight </Text>
           <View
             style={{
-              justifyContent: "center",
               alignItems: "center",
               flexDirection: "row",
             }}
@@ -169,7 +184,7 @@ function EditRoutine({
           ) : (
             <TouchableOpacity onPress={handleSubmit(handleAddPress)}>
               <LinearGradient
-                colors={["#cc0000", "#ff0000"]}
+                colors={["#cc0000", "#cc0000"]}
                 style={styles.addButton}
               >
                 <Text style={styles.plus}>+</Text>
@@ -197,13 +212,14 @@ const styles = StyleSheet.create({
   },
   weightContainer: {
     backgroundColor: "white",
-    width: "40%",
+    width: 110,
     height: 60,
     borderWidth: 1.2,
+    borderColor: "#e6e6e6",
     borderRadius: 25,
-    paddingHorizontal: 10,
+    paddingLeft: 15,
     justifyContent: "center",
-    alignItems: "center",
+    // alignItems: "center",
     marginVertical: 12,
   },
   weightInput: {
@@ -212,7 +228,6 @@ const styles = StyleSheet.create({
   counter: {
     width: 160,
     height: 130,
-    borderWidth: 1,
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
