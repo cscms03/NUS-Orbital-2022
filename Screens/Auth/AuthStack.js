@@ -8,6 +8,7 @@ import MainScreen from "../MainScreen";
 import SignUpScreen from "./SignUpScreen";
 import ConfirmEmail from "./ConfirmEmail";
 import ResetPassword from "./ResetPassword";
+import AddProfileInfo from "./AddProfileInfo";
 
 const Stack = createStackNavigator();
 
@@ -25,11 +26,13 @@ function AuthStack() {
           component={SignInScreen}
           options={{ headerShown: false }}
         />
+
         <Stack.Screen
-          name="MainScreen"
-          component={MainScreen}
+          name="AddProfileInfo"
+          component={AddProfileInfo}
           options={{ headerShown: false }}
         />
+
         <Stack.Screen
           name="SignUpScreen"
           component={SignUpScreen}

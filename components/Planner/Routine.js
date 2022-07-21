@@ -10,7 +10,6 @@ import {
   Image,
   Dimensions,
 } from "react-native";
-import { Entypo } from "@expo/vector-icons";
 import {
   doc,
   collection,
@@ -18,6 +17,7 @@ import {
   query,
   where,
   getDoc,
+  onSnapshot,
 } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import WorkoutDetails from "./WorkoutDetails";
@@ -49,7 +49,7 @@ function Routine({ date, modal }) {
   };
   useEffect(() => {
     return realtime;
-  }, [refresh, date, modal]);
+  }, [refresh]);
 
   const handleRefresh = () => {
     setRefresh(!refresh);

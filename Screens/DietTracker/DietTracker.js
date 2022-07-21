@@ -94,7 +94,7 @@ function DietTracker() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f4f4f4",
+    backgroundColor: "#f8f8f8",
     alignItems: "center",
   },
   header: {

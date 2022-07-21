@@ -14,9 +14,8 @@ import SolidButton from "../../components/Authentication/SolidButton";
 import CustomInput from "../../components/Authentication/CustomInput";
 import TextButton from "../../components/Authentication/TextButton";
 import { useForm } from "react-hook-form";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, app, db } from "../../firebase";
-import { setDoc, doc, collection } from "firebase/firestore";
+import { useDispatch } from "react-redux";
+import { signUp } from "../../redux/features/user";
 
 const EMAIL_REGEX =
   /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -27,47 +26,13 @@ function SignUpScreen({ navigation }) {
     handleSubmit,
     formState: { errors },
     watch,
-    getValues,
   } = useForm();
 
-  const pwd = watch("password");
-  const [loading, setLoading] = useState(false);
-  const email = watch("Email");
+  const dispatch = useDispatch();
   const password = watch("password");
-
-  const handleGetStartedPress = async (data) => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log(user.email);
-      })
-      .then(() => {
-        const user = auth.currentUser;
-        const uid = user.uid;
-
-        setDoc(doc(db, "users", uid), {
-          email: user.email,
-        });
-      })
-      .then(() => {
-        const user = auth.currentUser;
-        const uid = user.uid;
-
-        doc(collection(db, "users/" + uid, "routine"));
-        console.log("doc created");
-      })
-      .then(() => {
-        const user = auth.currentUser;
-        const uid = user.uid;
-
-        doc(collection(db, "users/" + uid, "diet"));
-        console.log("doc2 created");
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        Alert.alert(errorCode, errorMessage);
-      });
+  const handleGetStartedPress = () => {
+    dispatch(signUp({ email: watch("Email"), password: watch("password") }));
+    navigation.navigate("AddProfileInfo");
   };
 
   const handleGoBackSignInPress = () => {
@@ -123,7 +88,7 @@ function SignUpScreen({ navigation }) {
             control={control}
             rules={{
               validate: (value) =>
-                value === pwd || "The password does not match",
+                value === password || "The password does not match",
             }}
           />
 

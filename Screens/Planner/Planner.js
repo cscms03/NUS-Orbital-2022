@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   Modal,
   StatusBar,
+  Alert,
 } from "react-native";
 import Routine from "../../components/Planner/Routine";
 import SolidButton from "../../components/Authentication/SolidButton";
@@ -46,7 +47,11 @@ function Planner() {
   };
 
   const handleEditPress = () => {
-    setModal((prevModal) => !prevModal);
+    if (now) {
+      setModal((prevModal) => !prevModal);
+    } else {
+      Alert.alert("Please select a date");
+    }
   };
 
   const handleClosePress = () => {
@@ -57,13 +62,12 @@ function Planner() {
     <SafeAreaView style={styles.container}>
       <View
         style={{
-          backgroundColor: "#cc0000",
           width: "100%",
           height: getStatusBarHeight(),
           position: "absolute",
         }}
       >
-        <StatusBar barStyle="light-content" />
+        <StatusBar />
       </View>
       <CalendarStrip
         ref={ref}
@@ -79,15 +83,15 @@ function Planner() {
         daySelectionAnimation={{
           type: "background",
           duration: 200,
-          highlightColor: "#800000",
+          highlightColor: "#cc0000",
           color: "white",
         }}
-        calendarColor={"#cc0000"}
-        dateNumberStyle={{ color: "white" }}
-        dateNameStyle={{ color: "white" }}
+        calendarColor={"#f8f8f8"}
+        dateNumberStyle={{ color: "#000" }}
+        dateNameStyle={{ color: "#000" }}
         highlightDateNumberStyle={{ color: "white" }}
         highlightDateNameStyle={{ color: "white" }}
-        calendarHeaderStyle={{ fontSize: 20, color: "white" }}
+        calendarHeaderStyle={{ fontSize: 20 }}
         scrollerPaging={true}
         onDateSelected={handleOnDateSelected}
       />
@@ -141,7 +145,7 @@ function Planner() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#f8f8f8",
   },
   routine: {
     flex: 0.9,

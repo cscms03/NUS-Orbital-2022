@@ -304,13 +304,7 @@ function MealInput({ title }) {
               Delete
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={handleBottomSheet}
-            style={[styles.bottomSheetButton]}
-          >
-            <MaterialIcons name="cancel" size={20} color="black" />
-            <Text style={{ fontSize: 17, marginLeft: 17 }}>Cancel</Text>
-          </TouchableOpacity>
+
           <TouchableOpacity
             onPress={handleReset}
             style={[styles.bottomSheetButton, { borderBottomColor: "white" }]}
@@ -319,6 +313,14 @@ function MealInput({ title }) {
             <Text style={{ fontSize: 17, marginLeft: 17, color: "grey" }}>
               Reset
             </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={handleBottomSheet}
+            style={[styles.bottomSheetButton]}
+          >
+            <MaterialIcons name="cancel" size={20} color="black" />
+            <Text style={{ fontSize: 17, marginLeft: 17 }}>Cancel</Text>
           </TouchableOpacity>
         </View>
       </BottomSheet>
