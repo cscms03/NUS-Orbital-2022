@@ -1,5 +1,5 @@
-import { Image, KeyboardAvoidingView, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { useState } from 'react';
+import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useState, useEffect } from 'react';
 import Log from "../../components/ProgressionTracker/Log"; 
 import store from "../../redux/store";
 import AddProgressionLog from "./AddProgressionLog";
@@ -7,6 +7,9 @@ import ViewProgressionLog from "./ViewProgressionLog";
 import EditProgressionLog from "./EditProgressLog";
 import Icon from 'react-native-vector-icons/Entypo';
 import ImageGallery from "./ImageGallery";
+import {auth, db} from "../../firebase";
+import {getDoc, doc, docs, collection, onSnapshot} from "firebase/firestore"
+
 
 function ProgressTracker() {
   const [enterLogOn, setEnterLogOn] = useState(false); //toggle for modal of log entry screen
@@ -16,7 +19,8 @@ function ProgressTracker() {
   const [editLogInfo, setEditLogInfo] = useState(null); //stores info of log to edit
   const [editLogOn, setEditLogOn] = useState(false); //toggle for modal of log edit screen
   const [galleryOn, setGalleryOn] = useState(false); //toggle for modal of log gallery screen
-  
+  const [log, setLog] = useState([]);
+
   const LogRemoved = () => setRemoved(!removed);
   const toggleEntryScreen = () => setEnterLogOn(!enterLogOn);
   const toggleViewLog = () => setViewLogOn(!viewLogOn);
@@ -24,9 +28,20 @@ function ProgressTracker() {
   const toggleGallery = () => setGalleryOn(!galleryOn);
   const openViewLog = (logRecord) => setViewLog(logRecord);
 
-  store.subscribe(() => {
-    console.log("Entry Changed", store.getState())
-  })
+  const user = auth.currentUser;
+  const uid = user.uid;
+  const logRecordRef = collection(db, 'users/'+uid+'/log');
+
+  useEffect(
+    () =>
+      onSnapshot(logRecordRef, (snapshot) => 
+        setLog(snapshot.docs.map((doc) => ({...doc.data(), id: doc.id})))
+      ),
+    []
+  );
+  
+  console.log(log)
+  console.log(store.getState())
 
   return (
     <View style={styles.container}>
@@ -61,14 +76,14 @@ function ProgressTracker() {
         visible = {galleryOn}
         animationType = {'slide'}
       >
-          <ImageGallery toggleScreen ={toggleGallery}/>
+          <ImageGallery toggleScreen ={toggleGallery} data = {log}/>
       </Modal>
 
       {/* scrollview for log entries, mainscreen */}
       <ScrollView style = {styles.LogScreen}>
 
-          {store.getState().map((item) => {
-            return <TouchableOpacity key={item.id} onPress ={() => {openViewLog(item); toggleViewLog()}}><Log logInfo = {item} date = {item.logDate} logUpdate = {LogRemoved} edit = {setEditLogInfo} toggleLogEdit = {toggleEditLog}/></TouchableOpacity>
+          {log.map((item) => {
+            return <TouchableOpacity key={item.id} onPress ={() => {openViewLog(item); toggleViewLog()}}><Log logInfo = {item} logUpdate = {LogRemoved} edit = {setEditLogInfo} toggleLogEdit = {toggleEditLog}/></TouchableOpacity>
           })}
         
       </ScrollView>

@@ -3,10 +3,18 @@ import { useState } from 'react';
 import store from "../../redux/store";
 import {progressionLogAdded} from '../../redux/actions.js';
 import { Image, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {db, auth} from "../../firebase";
+import {addDoc, doc, docs, collection, onSnapshot} from "firebase/firestore"
+
 
 function AddProgressionLog (prop) {
   const [image, setImage] = useState(null);
   const [memo, setMemo] = useState(null);
+
+  var date = new Date().getDate();
+  var month = new Date().getMonth() + 1;
+  var year = new Date().getFullYear();
+  var dateAdded = date + '-' + month + '-' + year;
 
   const onImageAdd = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -20,10 +28,18 @@ function AddProgressionLog (prop) {
     }
   }
 
-  const onLogAdd = () => {
-    store.dispatch(progressionLogAdded(image, memo));
-    setMemo('');
-    setImage(null);
+  const onLogAdd = async () => {
+
+    const user = auth.currentUser;
+    const uid = user.uid;
+    const logCollectionRef = collection(db, 'users/'+uid+'/log');
+    const payload = {
+      logDate: dateAdded,
+      logMemo: memo,
+      logPhoto: image
+    };
+    await addDoc(logCollectionRef, payload);
+
   }
 
   return(
