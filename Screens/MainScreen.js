@@ -3,13 +3,13 @@ import { StyleSheet, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Profile from "./Profile/ProfileScreen";
-import HomeScreen from "./HomeScreen";
 import ProgressTracker from "./ProgressTracker/ProgressTracker";
 import DietTracker from "./DietTracker/DietTracker";
 import TimeScreen from "./TimeScreen";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Planner from "./Planner/Planner";
 import ProfileStack from "./Profile/ProfileStack";
+import DietStack from "./DietTracker/DietStack";
 
 export default function MainScreen() {
   const Tab = createBottomTabNavigator();
@@ -46,7 +46,7 @@ export default function MainScreen() {
       >
         <Tab.Screen
           name="Diet"
-          component={DietTracker}
+          component={DietStack}
           options={{ headerShown: false }}
         />
         <Tab.Screen

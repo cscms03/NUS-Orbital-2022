@@ -12,12 +12,13 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { auth, db } from "../../firebase";
+import { useFocusEffect } from "@react-navigation/native";
 
 function DayView({ date }) {
-  console.log(date);
   //states
 
   const [item, setItem] = useState([]);
+  const [bodyInfo, setBodyInfo] = useState([]);
 
   const user = auth.currentUser;
   const uid = user.uid;
@@ -35,9 +36,16 @@ function DayView({ date }) {
 
   useEffect(
     () =>
+      onSnapshot(doc(db, "users/" + uid), (snapshot) => {
+        setBodyInfo(snapshot.data());
+      }),
+    []
+  );
+
+  useEffect(
+    () =>
       onSnapshot(doc(db, "users/" + uid + "/diet/" + date), (snapshot) => {
         setItem(snapshot.data());
-        console.log(item?.totalProtein);
       }),
     [date]
   );
@@ -62,7 +70,7 @@ function DayView({ date }) {
           <Text style={styles.textSubtitle}>Target amount:</Text>
         </View>
         <View style={{ position: "absolute", top: "67%", left: "6%" }}>
-          <Text style={styles.textAmount}>105g</Text>
+          <Text style={styles.textAmount}>{bodyInfo.weight * 1.8}g</Text>
         </View>
         <View style={{ position: "absolute", top: "30%", left: "71%" }}>
           <Text style={{ fontSize: 20, fontWeight: "700" }}>%</Text>
@@ -106,7 +114,8 @@ function DayView({ date }) {
         </View>
         <View style={{ position: "absolute", top: "67%", left: "5%" }}>
           <Text style={styles.textAmount}>
-            2000<Text style={styles.unit}>kcal</Text>
+            {bodyInfo.gender === "Male" ? 2700 : 2000}
+            <Text style={styles.unit}>kcal</Text>
           </Text>
         </View>
         <View style={{ position: "absolute", top: "30%", left: "71%" }}>

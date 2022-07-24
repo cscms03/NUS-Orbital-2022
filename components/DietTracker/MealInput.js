@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
   TextInput,
   Alert,
+  Modal,
 } from "react-native";
-import Modal from "react-native-modal";
 import SolidButton from "../Authentication/SolidButton";
 import CustomInput from "./CustomInput";
 import { useForm } from "react-hook-form";
@@ -27,13 +27,13 @@ import {
   increment,
   deleteDoc,
 } from "firebase/firestore";
+import MealList from "./MealList";
 
-function MealInput({ title }) {
+function MealInput({ navigation, title, onPressNav }) {
   const {
     control,
-    handleSubmit,
     formState: { errors },
-    getValues,
+    watch,
   } = useForm();
 
   const printDate = () => {
@@ -50,54 +50,49 @@ function MealInput({ title }) {
   const uid = user.uid;
   const dietCol = collection(db, "users/" + uid + "/diet");
 
-  const [currMeal, setCurrMeal] = useState("");
   const [modal, setModal] = useState(false);
-  const foodName = getValues("food");
-  const [protein, setProtein] = useState("");
-  const [calories, setCalories] = useState("");
+  const foodName = watch("food");
   const [mealItem, setMealItem] = useState([]);
   const [BottomSheetVisible, setBottomSheetVisible] = useState(false);
 
-  const proteinNum = Number(protein);
-  const caloriesNum = Number(calories);
   const docRef = doc(collection(db, "users/" + uid + "/diet"), date);
   const dietColRef = doc(
     collection(db, "users/" + uid + "/diet/" + date, title),
     "default"
   );
 
-  const handleAddPress = async () => {
-    setDoc(
-      dietColRef,
-      {
-        name: foodName,
-        isAdded: true,
-        protein: proteinNum,
-        calories: caloriesNum,
-      },
-      { merge: true }
-    )
-      .then(() => {
-        setDoc(
-          docRef,
-          {
-            weekAgo: 0, //this week: 0, last week: 1, two weeks ago or more: 2
-            date: date,
-            totalProtein: increment(proteinNum),
-            totalCalories: increment(caloriesNum),
-          },
-          { merge: true }
-        );
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        Alert.alert(errorCode, errorMessage);
-      })
-      .finally(() => {
-        setModal(!modal);
-      });
-  };
+  // const handleAddPress = async () => {
+  //   setDoc(
+  //     dietColRef,
+  //     {
+  //       name: foodName,
+  //       isAdded: true,
+  //       protein: proteinNum,
+  //       calories: caloriesNum,
+  //     },
+  //     { merge: true }
+  //   )
+  //     .then(() => {
+  //       setDoc(
+  //         docRef,
+  //         {
+  //           weekAgo: 0, //this week: 0, last week: 1, two weeks ago or more: 2
+  //           date: date,
+  //           totalProtein: increment(proteinNum),
+  //           totalCalories: increment(caloriesNum),
+  //         },
+  //         { merge: true }
+  //       );
+  //     })
+  //     .catch((error) => {
+  //       const errorCode = error.code;
+  //       const errorMessage = error.message;
+  //       Alert.alert(errorCode, errorMessage);
+  //     })
+  //     .finally(() => {
+  //       setModal(!modal);
+  //     });
+  // };
 
   const handleModal = () => {
     setModal(!modal);
@@ -129,7 +124,7 @@ function MealInput({ title }) {
       );
       await deleteDoc(
         doc(
-          collection(db, "users/" + uid + "/diet/" + date + "/Snacks"),
+          collection(db, "users/" + uid + "/diet/" + date + "/Snacks-Supper"),
           "default"
         )
       );
@@ -186,11 +181,14 @@ function MealInput({ title }) {
         collection(db, "users/" + uid + "/diet/" + date + "/" + title),
         (snapshot) => {
           setMealItem(snapshot?.docs?.map((doc) => doc.data()));
-          console.log(mealItem);
         }
       ),
     [date]
   );
+
+  useEffect(() => {
+    setModal(false);
+  }, [mealItem[0]?.isAdded]);
 
   return (
     <TouchableOpacity
@@ -211,8 +209,22 @@ function MealInput({ title }) {
       </View>
 
       <View>
-        <Modal isVisible={modal} style={styles.modal} avoidKeyboard={true}>
+        <Modal
+          visible={modal}
+          animationType="slide"
+          presentationStyle="formSheet"
+          style={styles.modal}
+          avoidKeyboard={true}
+        >
           <View style={styles.modalContainer}>
+            <TouchableOpacity
+              onPress={handleModal}
+              style={{ alignItems: "flex-end", marginTop: 10 }}
+            >
+              <Text style={{ color: "blue", marginRight: 10, fontSize: 17 }}>
+                Close
+              </Text>
+            </TouchableOpacity>
             <View style={{ justifyContent: "center", alignItems: "center" }}>
               <Text
                 style={{
@@ -235,57 +247,7 @@ function MealInput({ title }) {
               }}
             />
 
-            <View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Text style={styles.label}> Protein:</Text>
-                <TextInput
-                  value={protein}
-                  keyboardType="numeric"
-                  onChangeText={(prot) => setProtein(prot)}
-                  placeholder="g"
-                  style={styles.numberField}
-                  maxLength={4}
-                />
-              </View>
-
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Text style={styles.label}> Calories:</Text>
-                <TextInput
-                  value={calories}
-                  keyboardType="numeric"
-                  onChangeText={(cal) => setCalories(cal)}
-                  placeholder="kcal"
-                  style={styles.numberField}
-                  maxLength={4}
-                />
-              </View>
-            </View>
-
-            <SolidButton
-              colors={["#c00", "#c00"]}
-              text="Add"
-              alignment="center"
-              onPress={handleSubmit(handleAddPress)}
-            />
-
-            <TouchableOpacity
-              onPress={handleModal}
-              style={{ alignItems: "flex-end", marginTop: 17 }}
-            >
-              <Text style={{ color: "blue" }}>Close</Text>
-            </TouchableOpacity>
+            <MealList query={foodName} title={title} />
           </View>
         </Modal>
       </View>
@@ -332,7 +294,7 @@ export default MealInput;
 
 const styles = StyleSheet.create({
   container: {
-    width: "98%",
+    width: "100%",
     height: 53,
     alignItems: "center",
     justifyContent: "space-between",
@@ -347,38 +309,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalContainer: {
-    width: Dimensions.get("window").width * 0.83,
-    height: 395,
-    backgroundColor: "white",
-    borderRadius: 15,
+    width: Dimensions.get("window").width,
+    // height: Dimensions.get("window").height,
     backgroundColor: "#f9fbfc",
-    padding: 20,
+    borderRadius: 15,
+    padding: 10,
   },
-  protein: {
-    width: 160,
-    height: 130,
-    borderWidth: 1,
-    borderRadius: 30,
-    justifyContent: "center",
-    marginHorizontal: 10,
-    marginVertical: 20,
-  },
-  numberField: {
-    backgroundColor: "white",
-    width: 100,
-    height: 47,
-    borderColor: "#e8e8e8",
-    borderWidth: 1,
-    borderRadius: 25,
-    paddingHorizontal: 10,
-    justifyContent: "center",
-    marginVertical: 13,
-  },
-  label: {
-    color: "#930000",
-    fontSize: 20,
-    fontWeight: "bold",
-  },
+
   bottomSheetContainer: {
     width: "100%",
     height: 230,

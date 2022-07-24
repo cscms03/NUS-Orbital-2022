@@ -2,16 +2,16 @@ import React, { Component, useState, useEffect, useRef } from "react";
 import { View, StyleSheet, Alert } from "react-native";
 import MealInput from "./MealInput";
 
-function Meals({ date }) {
+function Meals({ date, onPressNav }) {
   return (
     <View style={styles.mealInputContainer}>
-      <MealInput title="Breakfast" date={date} />
+      <MealInput title="Breakfast" date={date} onPressNav={onPressNav} />
 
-      <MealInput title="Lunch" date={date} />
+      <MealInput title="Lunch" date={date} onPressNav={onPressNav} />
 
-      <MealInput title="Dinner" date={date} />
+      <MealInput title="Dinner" date={date} onPressNav={onPressNav} />
 
-      <MealInput title="Snacks-Supper" date={date} />
+      <MealInput title="Snacks-Supper" date={date} onPressNav={onPressNav} />
     </View>
   );
 }

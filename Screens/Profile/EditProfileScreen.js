@@ -116,6 +116,7 @@ function EditProfileScreen({ navigation }) {
                 control={control}
                 widthRatio={0.4}
                 defaultValue={prevItems.age}
+                type="numeric"
                 rules={{
                   required: "Age is required",
                 }}
@@ -131,6 +132,7 @@ function EditProfileScreen({ navigation }) {
                 control={control}
                 widthRatio={0.4}
                 defaultValue={prevItems.weight}
+                type="numeric"
                 rules={{
                   required: "Weight is required",
                 }}

@@ -1,11 +1,22 @@
-import { Image, KeyboardAvoidingView, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { useState } from 'react';
-import Log from "../../components/ProgressionTracker/Log"; 
+import {
+  Image,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { useState } from "react";
+import Log from "../../components/ProgressionTracker/Log";
 import store from "../../redux/store";
 import AddProgressionLog from "./AddProgressionLog";
 import ViewProgressionLog from "./ViewProgressionLog";
 import EditProgressionLog from "./EditProgressLog";
-import Icon from 'react-native-vector-icons/Entypo';
+import Icon from "react-native-vector-icons/Entypo";
 import ImageGallery from "./ImageGallery";
 
 function ProgressTracker() {
@@ -16,7 +27,7 @@ function ProgressTracker() {
   const [editLogInfo, setEditLogInfo] = useState(null); //stores info of log to edit
   const [editLogOn, setEditLogOn] = useState(false); //toggle for modal of log edit screen
   const [galleryOn, setGalleryOn] = useState(false); //toggle for modal of log gallery screen
-  
+
   const LogRemoved = () => setRemoved(!removed);
   const toggleEntryScreen = () => setEnterLogOn(!enterLogOn);
   const toggleViewLog = () => setViewLogOn(!viewLogOn);
@@ -25,69 +36,88 @@ function ProgressTracker() {
   const openViewLog = (logRecord) => setViewLog(logRecord);
 
   store.subscribe(() => {
-    console.log("Entry Changed", store.getState())
-  })
+    console.log("Entry Changed", store.getState());
+  });
+
+  const ios = Platform.OS === "ios";
 
   return (
     <View style={styles.container}>
-
       {/* modal for adding logs */}
       <Modal
-        visible = {enterLogOn}
-        animationType = {'slide'}
-      > 
-        <AddProgressionLog toggleScreen = {toggleEntryScreen}/>
+        visible={enterLogOn}
+        animationType={"slide"}
+        presentationStyle="formSheet"
+      >
+        <AddProgressionLog toggleScreen={toggleEntryScreen} />
       </Modal>
 
-    
       {/* modal for viewing logs */}
       <Modal
-        visible = {viewLogOn}
-        animationType = {'slide'}
+        visible={viewLogOn}
+        animationType={"slide"}
+        presentationStyle="formSheet"
       >
-        <ViewProgressionLog toggleScreen = {toggleViewLog} logInfo = {viewLog} />
+        <ViewProgressionLog toggleScreen={toggleViewLog} logInfo={viewLog} />
       </Modal>
 
       {/* modal for editing logs */}
       <Modal
-        visible = {editLogOn}
-        animationType = {'slide'}
+        visible={editLogOn}
+        animationType={"slide"}
+        presentationStyle="formSheet"
       >
-        <EditProgressionLog toggleScreen = {toggleEditLog} logInfo = {editLogInfo}/>
+        <EditProgressionLog
+          toggleScreen={toggleEditLog}
+          logInfo={editLogInfo}
+        />
       </Modal>
 
       {/* modal for gallery screen*/}
       <Modal
-        visible = {galleryOn}
-        animationType = {'slide'}
+        visible={galleryOn}
+        animationType={"slide"}
+        presentationStyle="formSheet"
       >
-          <ImageGallery toggleScreen ={toggleGallery}/>
+        <ImageGallery toggleScreen={toggleGallery} />
       </Modal>
 
       {/* scrollview for log entries, mainscreen */}
-      <ScrollView style = {styles.LogScreen}>
-
-          {store.getState().map((item) => {
-            return <TouchableOpacity key={item.id} onPress ={() => {openViewLog(item); toggleViewLog()}}><Log logInfo = {item} date = {item.logDate} logUpdate = {LogRemoved} edit = {setEditLogInfo} toggleLogEdit = {toggleEditLog}/></TouchableOpacity>
-          })}
-        
+      <ScrollView style={styles.LogScreen}>
+        {store.getState().map((item) => {
+          return (
+            <TouchableOpacity
+              key={item.id}
+              onPress={() => {
+                openViewLog(item);
+                toggleViewLog();
+              }}
+            >
+              <Log
+                logInfo={item}
+                date={item.logDate}
+                logUpdate={LogRemoved}
+                edit={setEditLogInfo}
+                toggleLogEdit={toggleEditLog}
+              />
+            </TouchableOpacity>
+          );
+        })}
       </ScrollView>
-      
+
       {/* Button for adding logs */}
-      <TouchableOpacity style = {styles.button} onPress = {toggleEntryScreen}>
-        <View style= {styles.addButton}>
-          <Text style = {styles.plus}>+</Text>
+      <TouchableOpacity style={styles.button} onPress={toggleEntryScreen}>
+        <View style={styles.addButton}>
+          <Text style={styles.plus}>+</Text>
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style = {styles.button} onPress = {toggleGallery}>
-        <View style = {styles.galleryButton}>
-          <Icon name="documents" size={25} color="#fff"/>
+      <TouchableOpacity style={styles.button} onPress={toggleGallery}>
+        <View style={styles.galleryButton}>
+          <Icon name="documents" size={25} color="#fff" />
         </View>
       </TouchableOpacity>
-
     </View>
-    
   );
 }
 
@@ -96,17 +126,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  logScreenHeader:{
+  logScreenHeader: {
     backgroundColor: "#CC0000",
     height: 70,
     alignItems: "center",
     justifyContent: "center",
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-  },  
+  },
   logScreenHeading: {
     fontSize: 25,
-    color: "#fff"
+    color: "#fff",
   },
   logscreen: {
     flexGrow: 1,
@@ -119,11 +149,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     bottom: 40,
-    left: 40
+    left: 40,
   },
   plus: {
     fontSize: 40,
-    color: "#fff"
+    color: "#fff",
   },
   button: {
     position: "absolute",
