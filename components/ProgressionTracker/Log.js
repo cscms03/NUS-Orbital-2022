@@ -1,8 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View, Alert, ShadowPropTypesIOS } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, Alert } from "react-native";
 import { useState } from "react";
 import { progressionLogRemoved } from "../../redux/actions.js";
 import store from "../../redux/store";
 import Icon from 'react-native-vector-icons/Entypo'
+import {db, auth} from "../../firebase";
+import {deleteDoc, doc, docs, collection, onSnapshot} from "firebase/firestore"
 
 const Log = (props) => {
 
@@ -13,10 +15,16 @@ const Log = (props) => {
       [
         {
           text: "Delete",
-          onPress: () => {
-            store.dispatch(progressionLogRemoved(props.logInfo.id));
-            props.logUpdate()
-            console.log("Log Deleted")},
+          onPress: async () => {
+            // store.dispatch(progressionLogRemoved(props.logInfo.id));
+            // props.logUpdate()
+            // console.log("Log Deleted")
+            
+            const user = auth.currentUser;
+            const uid = user.uid;
+            const logRef = doc(db, 'users/'+uid+'/log/'+props.logInfo.id);
+            await deleteDoc(logRef);
+          },
           style: "cancel"
         },
         { text: "Cancel", onPress: () => console.log("Canceled") }
@@ -32,7 +40,7 @@ const Log = (props) => {
   return(
     
     <View style = {styles.logBox}>
-      <Text style = {{fontSize: 18}}>Progress Log made on {props.date}</Text>
+      <Text style = {{fontSize: 18}}>Progress Log made on {props.logInfo.logDate}</Text>
       <TouchableOpacity style = {styles.removeButton} onPress = {() => onLogRemove()}>
         <Text style = {{fontSize: 25, color: "#f00"}}>X</Text>
       </TouchableOpacity>
