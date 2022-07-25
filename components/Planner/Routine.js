@@ -51,6 +51,10 @@ function Routine({ date, modal }) {
     return realtime;
   }, [refresh]);
 
+  useEffect(() => {
+    return realtime;
+  }, []);
+
   const handleRefresh = () => {
     setRefresh(!refresh);
   };

@@ -1,8 +1,14 @@
 import React, { Component, useEffect, useState } from "react";
-import { View, Text, StyleSheet, Modal, Alert } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Modal,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { BottomSheet } from "react-native-btr";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import SolidButton from "../Authentication/SolidButton";
 import { updateDoc, doc, deleteDoc } from "firebase/firestore";
 import { db, auth } from "../../firebase";

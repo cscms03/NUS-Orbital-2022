@@ -15,6 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { useEffect, useState } from "react";
+import { Platform } from "react-native";
 
 function EditProfileScreen({ navigation }) {
   const {
@@ -61,9 +62,6 @@ function EditProfileScreen({ navigation }) {
     }
   };
 
-  console.log(prevItems);
-  console.log(prevItems.name);
-
   const name = prevItems.name;
 
   return (
@@ -73,15 +71,27 @@ function EditProfileScreen({ navigation }) {
           style={{ paddingLeft: 20, flexDirection: "row" }}
           onPress={handleBackPress}
         >
-          <Ionicons name="chevron-back" size={22} color="white" />
-          <Text style={{ color: "white", fontSize: 17, fontWeight: "600" }}>
+          <Ionicons
+            name="chevron-back"
+            size={22}
+            color="white"
+            style={{ top: Platform.OS === "android" ? 30 : 0 }}
+          />
+          <Text
+            style={{
+              color: "white",
+              fontSize: 17,
+              fontWeight: "600",
+              top: Platform.OS === "android" ? 30 : 0,
+            }}
+          >
             Back
           </Text>
         </TouchableOpacity>
         {/* Add/change profile picture here */}
-        <TouchableOpacity style={styles.header}>
+        <View style={styles.header}>
           <Ionicons name="person-circle" size={120} color="white" />
-        </TouchableOpacity>
+        </View>
 
         <View style={styles.footer}>
           <View style={{ alignItems: "center" }}>

@@ -7,6 +7,7 @@ import {
   Modal,
   StatusBar,
   Alert,
+  Platform,
 } from "react-native";
 import Routine from "../../components/Planner/Routine";
 import SolidButton from "../../components/Authentication/SolidButton";
@@ -31,6 +32,8 @@ if (maxmm < 10) {
 
 const minDate = yyyy + "-" + minmm + "-" + dd;
 const maxDate = yyyy + "-" + maxmm + "-" + dd;
+
+const ios = Platform.OS === "ios";
 
 function Planner() {
   const ref = useRef();
@@ -114,13 +117,36 @@ function Planner() {
         <Routine date={now} modal={modal} />
       </View>
 
-      <View style={{ position: "absolute", top: "90%", left: "10%" }}>
+      <View
+        style={{
+          position: "absolute",
+          top: ios ? "86%" : "80%",
+          left: "10%",
+        }}
+      >
         <SolidButton
           colors={["#cc0000", "#cc0000"]}
           text="Add more plans!"
           alignment="flex-start"
           onPress={handleEditPress}
         />
+      </View>
+      <View
+        style={{
+          top: 40,
+          paddingHorizontal: 40,
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 14,
+            fontWeight: "500",
+            fontStyle: "italic",
+            color: "grey",
+          }}
+        >
+          If you do not see your plans after you added, try refreshing!
+        </Text>
       </View>
 
       <Modal

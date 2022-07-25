@@ -51,6 +51,7 @@ function Profile({ navigation }) {
             color: "white",
             fontWeight: "600",
             alignSelf: "center",
+            top: !ios ? 20 : 0,
           }}
         >
           Profile
@@ -92,6 +93,7 @@ const styles = StyleSheet.create({
   header: {
     flex: 0.37,
     width: "100%",
+
     // alignItems: "center",
   },
   footer: {
