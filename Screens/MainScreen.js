@@ -3,7 +3,6 @@ import { StyleSheet, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Profile from "./Profile/ProfileScreen";
-import HomeScreen from "./HomeScreen";
 import ProgressTracker from "./ProgressTracker/ProgressTracker";
 import DietTracker from "./DietTracker/DietTracker";
 import TimeScreen from "./TimeScreen";

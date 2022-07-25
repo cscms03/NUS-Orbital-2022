@@ -9,10 +9,10 @@ import {
   Keyboard,
   Alert,
   Image,
+  TouchableOpacity,
 } from "react-native";
 import { useForm } from "react-hook-form";
 import InputField from "../../components/Planner/InputField";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
 import NumericInput from "react-native-numeric-input";
 import { auth, db } from "../../firebase";
@@ -52,8 +52,8 @@ function EditRoutine({
     const document = doc(db, "users/" + uid + "/routine", id);
     await updateDoc(document, {
       details: {
-        name,
-        weight,
+        name: name || prevName,
+        weight: weight || prevWeight,
         sets,
         reps,
         isDone,

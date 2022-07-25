@@ -4,11 +4,9 @@ import userReducer from "./features/user";
 import profileReducer from "./features/profile";
 
 const store = configureStore({
-  reducer: {
-    reducer,
-    user: userReducer,
-    profile: profileReducer,
-  },
+  reducer,
+  user: userReducer,
+  profile: profileReducer,
 });
 
 export default store;

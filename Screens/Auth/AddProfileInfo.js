@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Platform,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import ProfileInput from "../../components/Profile/ProfileInput";
@@ -35,40 +36,6 @@ function AddProfileInfo({ navigation }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const dispatch = useDispatch();
 
-  // const handleGetStartedPress = async (data) => {
-  //   createUserWithEmailAndPassword(auth, email, password)
-  //     .then((userCredential) => {
-  //       const user = userCredential.user;
-  //       console.log(user.email);
-  //     })
-  //     .then(() => {
-  //       const user = auth.currentUser;
-  //       const uid = user.uid;
-
-  //       setDoc(doc(db, "users", uid), {
-  //         email: user.email,
-  //       });
-  //     })
-  //     .then(() => {
-  //       const user = auth.currentUser;
-  //       const uid = user.uid;
-
-  //       doc(collection(db, "users/" + uid, "routine"));
-  //       console.log("routine created");
-  //     })
-  //     .then(() => {
-  //       const user = auth.currentUser;
-  //       const uid = user.uid;
-
-  //       doc(collection(db, "users/" + uid, "diet"));
-  //       console.log("diet created");
-  //     })
-  //     .catch((error) => {
-  //       const errorCode = error.code;
-  //       const errorMessage = error.message;
-  //       Alert.alert(errorCode, errorMessage);
-  //     });
-  // };
   const { email, password } = useSelector((state) => state.user.value);
 
   const { name, age, weight, gender } = useSelector(
@@ -91,7 +58,6 @@ function AddProfileInfo({ navigation }) {
       .then(() => {
         const user = auth.currentUser;
         const uid = user.uid;
-
         setDoc(doc(db, "users", uid), {
           email: user.email,
           name: name,
@@ -142,7 +108,14 @@ function AddProfileInfo({ navigation }) {
           duration={500}
         >
           <View style={{ alignItems: "center" }}>
-            <ProfileInput name="name" placeholder="Name" control={control} />
+            <ProfileInput
+              name="name"
+              placeholder="Name"
+              control={control}
+              rules={{
+                required: "Name is required",
+              }}
+            />
           </View>
 
           <SegmentedControlTab
@@ -162,26 +135,36 @@ function AddProfileInfo({ navigation }) {
 
           <View style={styles.numInputContainer}>
             <Text style={styles.label}> Age:</Text>
-            <ProfileInput
-              name="age"
-              placeholder="E.g. 21"
-              control={control}
-              widthRatio={0.4}
-              type="numeric"
-            />
+            <View>
+              <ProfileInput
+                name="age"
+                placeholder="E.g. 21"
+                control={control}
+                widthRatio={0.4}
+                type="numeric"
+                rules={{
+                  required: "Age is required",
+                }}
+              />
+            </View>
           </View>
           <View style={styles.numInputContainer}>
             <Text style={styles.label}> Weight:</Text>
-            <ProfileInput
-              name="weight"
-              placeholder="kg"
-              control={control}
-              widthRatio={0.4}
-              type="numeric"
-            />
+            <View>
+              <ProfileInput
+                name="weight"
+                placeholder="kg"
+                control={control}
+                widthRatio={0.4}
+                type="numeric"
+                rules={{
+                  required: "Weight is required",
+                }}
+              />
+            </View>
           </View>
 
-          <TouchableOpacity onPress={handleStartPress}>
+          <TouchableOpacity onPress={handleSubmit(handleStartPress)}>
             <LinearGradient colors={["#c00", "#aa0000"]} style={styles.button}>
               <Text style={{ fontSize: 17, fontWeight: "600", color: "white" }}>
                 Start Workout!
