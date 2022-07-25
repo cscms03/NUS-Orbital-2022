@@ -23,9 +23,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, app, db } from "../../firebase";
 import { setDoc, doc, collection } from "firebase/firestore";
 
-const ios = Platform.OS === "ios";
-
-function AddProfileInfo({ navigation }) {
+function AddProfileInfo({ navigation, email, password }) {
   const {
     control,
     handleSubmit,
@@ -35,12 +33,6 @@ function AddProfileInfo({ navigation }) {
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const dispatch = useDispatch();
-
-  const { email, password } = useSelector((state) => state.user.value);
-
-  const { name, age, weight, gender } = useSelector(
-    (state) => state.profile.value
-  );
 
   const handleStartPress = async () => {
     dispatch(
@@ -60,10 +52,10 @@ function AddProfileInfo({ navigation }) {
         const uid = user.uid;
         setDoc(doc(db, "users", uid), {
           email: user.email,
-          name: name,
-          gender: gender,
-          age: age,
-          weight: weight,
+          name: watch("name"),
+          gender: selectedIndex === 0 ? "Male" : "Female",
+          age: parseInt(watch("age")),
+          weight: parseInt(watch("weight")),
         });
       })
       .catch((error) => {
@@ -77,26 +69,9 @@ function AddProfileInfo({ navigation }) {
     setSelectedIndex(selectedIndex === 0 ? 1 : 0);
   };
 
-  const handleBackPress = () => {
-    navigation.navigate("SignUpScreen");
-  };
-
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
-        <TouchableOpacity
-          style={{
-            paddingLeft: 20,
-            flexDirection: "row",
-            top: ios ? 55 : 15,
-          }}
-          onPress={handleBackPress}
-        >
-          <Ionicons name="chevron-back" size={22} color="white" />
-          <Text style={{ color: "white", fontSize: 17, fontWeight: "600" }}>
-            Back
-          </Text>
-        </TouchableOpacity>
         {/* Add/change profile picture here */}
         <View style={styles.header}>
           <Ionicons name="person-circle" size={120} color="white" />
@@ -184,7 +159,6 @@ const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
     backgroundColor: "#cc0000",
   },
   header: {
