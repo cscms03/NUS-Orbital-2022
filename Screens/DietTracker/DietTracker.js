@@ -1,4 +1,3 @@
-// import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
   Text,
@@ -18,11 +17,15 @@ import History from "../../components/DietTracker/History";
 import MealInput from "../../components/DietTracker/MealInput";
 import Meals from "../../components/DietTracker/Meals";
 
-function DietTracker() {
+function DietTracker({ navigation }) {
   const [pressed, setPressed] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const today = new Date();
+
+  const onPressNav = () => {
+    navigation.navigate("SearchMealScreen");
+  };
 
   console.log(today);
 
@@ -81,7 +84,7 @@ function DietTracker() {
             style={styles.mealInputContainer}
             showsVerticalScrollIndicator={false}
           >
-            <Meals date={date} />
+            <Meals date={date} onPressNav={onPressNav} />
           </ScrollView>
         </>
       ) : (

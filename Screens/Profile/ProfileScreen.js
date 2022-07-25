@@ -15,6 +15,7 @@ const ios = Platform.OS === "ios";
 
 function Profile({ navigation }) {
   const [items, setItems] = useState([]);
+
   const handleSignOutPress = async () => {
     signOut(auth)
       .then(() => {
@@ -37,6 +38,8 @@ function Profile({ navigation }) {
       }),
     []
   );
+
+  console.log(items.name);
 
   return (
     <SafeAreaView style={styles.container}>
