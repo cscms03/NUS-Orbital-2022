@@ -7,7 +7,6 @@ import store from "../../redux/store"
 
 function ImageGallery (props) {
   const isCarousel = React.useRef(null)
-  const data = store.getState()
 
   return (
       <View style = {styles.container}>
@@ -22,7 +21,7 @@ function ImageGallery (props) {
             layout="stack"
             layoutCardOffset={20}
             ref={isCarousel}
-            data={data}
+            data={props.data}
             renderItem={ImageCarousel}
             sliderWidth={SLIDER_WIDTH}
             itemWidth={ITEM_WIDTH}

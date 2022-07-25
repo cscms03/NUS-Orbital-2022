@@ -3,6 +3,9 @@ import { useState } from 'react';
 import store from "../../redux/store";
 import {progressionLogEdited} from '../../redux/actions.js';
 import { Image, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {db, auth} from "../../firebase";
+import {setDoc, doc, docs, collection, onSnapshot} from "firebase/firestore"
+
 
 function EditProgressionLog (props) {
   const [image, setImage] = useState(props.logInfo.logPhoto);
@@ -20,10 +23,16 @@ function EditProgressionLog (props) {
     }
   }
 
-  const onLogEdit = () => {
-    store.dispatch(progressionLogEdited(props.logInfo, image, memo));
-    setMemo('');
-    setImage(null);
+  const onLogEdit = async () => {
+    const user = auth.currentUser;
+    const uid = user.uid;
+    const logRef = doc(db, 'users/'+uid+'/log/'+props.logInfo.id);
+    const payload = {
+      logDate: props.logInfo.logDate,
+      logMemo: memo,
+      logPhoto: image
+    };
+    await setDoc(logRef, payload);
   }
 
   return(

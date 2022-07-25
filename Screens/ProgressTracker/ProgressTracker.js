@@ -10,14 +10,17 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useState } from "react";
 import Log from "../../components/ProgressionTracker/Log";
+import { useState, useEffect } from 'react';
 import store from "../../redux/store";
 import AddProgressionLog from "./AddProgressionLog";
 import ViewProgressionLog from "./ViewProgressionLog";
 import EditProgressionLog from "./EditProgressLog";
 import Icon from "react-native-vector-icons/Entypo";
 import ImageGallery from "./ImageGallery";
+import {auth, db} from "../../firebase";
+import {getDoc, doc, docs, collection, onSnapshot} from "firebase/firestore"
+
 
 function ProgressTracker() {
   const [enterLogOn, setEnterLogOn] = useState(false); //toggle for modal of log entry screen
@@ -27,6 +30,7 @@ function ProgressTracker() {
   const [editLogInfo, setEditLogInfo] = useState(null); //stores info of log to edit
   const [editLogOn, setEditLogOn] = useState(false); //toggle for modal of log edit screen
   const [galleryOn, setGalleryOn] = useState(false); //toggle for modal of log gallery screen
+  const [log, setLog] = useState([]);
 
   const LogRemoved = () => setRemoved(!removed);
   const toggleEntryScreen = () => setEnterLogOn(!enterLogOn);
@@ -40,6 +44,17 @@ function ProgressTracker() {
   });
 
   const ios = Platform.OS === "ios";
+  const user = auth.currentUser;
+  const uid = user.uid;
+  const logRecordRef = collection(db, 'users/'+uid+'/log');
+
+  useEffect(
+    () =>
+      onSnapshot(logRecordRef, (snapshot) => 
+        setLog(snapshot.docs.map((doc) => ({...doc.data(), id: doc.id})))
+      ),
+    []
+  );
 
   return (
     <View style={styles.container}>
@@ -79,12 +94,12 @@ function ProgressTracker() {
         animationType={"slide"}
         presentationStyle="formSheet"
       >
-        <ImageGallery toggleScreen={toggleGallery} />
+        <ImageGallery toggleScreen={toggleGallery} data = {log}/>
       </Modal>
 
       {/* scrollview for log entries, mainscreen */}
       <ScrollView style={styles.LogScreen}>
-        {store.getState().map((item) => {
+        {log.map((item) => {
           return (
             <TouchableOpacity
               key={item.id}
@@ -95,7 +110,6 @@ function ProgressTracker() {
             >
               <Log
                 logInfo={item}
-                date={item.logDate}
                 logUpdate={LogRemoved}
                 edit={setEditLogInfo}
                 toggleLogEdit={toggleEditLog}
