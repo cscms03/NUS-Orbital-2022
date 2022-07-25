@@ -20,7 +20,7 @@ function DonutChart({
   textColor,
   max = 100,
 }) {
-  const ratio = percentage / max;
+  const ratio = Math.round((percentage / max) * 100) / 100;
 
   const green = ratio <= 0.5 ? Math.floor(255 * ratio * 2) : 255;
   const red = ratio <= 0.5 ? 255 : Math.floor(255 * (1 - ratio));
