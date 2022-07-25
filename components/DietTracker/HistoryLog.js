@@ -1,5 +1,7 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, FlatList, Dimensions } from "react-native";
+import { doc, onSnapshot } from "firebase/firestore";
+import { auth, db } from "../../firebase";
 
 function HistoryLog({
   date,
@@ -8,6 +10,19 @@ function HistoryLog({
   protPercentage,
   calPercentage,
 }) {
+  const user = auth.currentUser;
+  const uid = user.uid;
+
+  const [bodyInfo, setBodyInfo] = useState([]);
+
+  useEffect(
+    () =>
+      onSnapshot(doc(db, "users/" + uid), (snapshot) => {
+        setBodyInfo(snapshot.data());
+      }),
+    []
+  );
+
   return (
     <View style={styles.container}>
       <View style={styles.dateContainer}>
@@ -26,14 +41,16 @@ function HistoryLog({
         <View style={styles.detailsColumn}>
           <Text style={styles.units}>g %</Text>
           <Text style={styles.details}>
-            {Math.round((protein / 105) * 100)}
+            {Math.round((protein / (bodyInfo.weight * 1.8)) * 100)}
           </Text>
         </View>
 
         <View style={styles.detailsColumn}>
           <Text style={styles.units}>kcal %</Text>
           <Text style={styles.details}>
-            {Math.round((calories / 2000) * 100)}
+            {Math.round(
+              (calories / (bodyInfo.gender === "Male" ? 2700 : 2000)) * 100
+            )}
           </Text>
         </View>
       </View>

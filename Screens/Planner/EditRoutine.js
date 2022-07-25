@@ -10,6 +10,8 @@ import {
   Alert,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
+  Dimensions,
 } from "react-native";
 import { useForm } from "react-hook-form";
 import InputField from "../../components/Planner/InputField";
@@ -48,9 +50,13 @@ function EditRoutine({
     formState: { errors },
     getValues,
   } = useForm();
+
+  const [loading, setLoading] = useState(false);
+
   const handleUpdatePress = async () => {
     const document = doc(db, "users/" + uid + "/routine", id);
-    await updateDoc(document, {
+    setLoading(true);
+    updateDoc(document, {
       details: {
         name: name || prevName,
         weight: weight || prevWeight,
@@ -58,29 +64,33 @@ function EditRoutine({
         reps,
         isDone,
       },
-    });
-    Alert.alert("Plan updated! Please exit");
+    })
+      .then(() => {
+        setLoading(false);
+      })
+      .then(() => Alert.alert("Plan updated! Please exit"));
   };
 
   const handleAddPress = async () => {
-    try {
-      if (selectedDate === undefined) Alert.alert("Please select a date");
-      await addDoc(collection(db, userRoutineDoc, "routine"), {
-        date: selectedDate,
-        createdAt: serverTimestamp(),
-        details: {
-          name: name,
-          weight: weight,
-          sets: sets,
-          reps: reps,
-          isDone: false,
-        },
-      });
-      Alert.alert("Plan added! Please exit");
-    } catch (error) {
-      console.log(error.message);
-      Alert.alert(error.message);
-    }
+    if (selectedDate === undefined) Alert.alert("Please select a date");
+    setLoading(true);
+
+    addDoc(collection(db, userRoutineDoc, "routine"), {
+      date: selectedDate,
+      createdAt: serverTimestamp(),
+      details: {
+        name: name,
+        weight: weight,
+        sets: sets,
+        reps: reps,
+        isDone: false,
+      },
+    })
+      .then(() => {
+        setLoading(false);
+      })
+      .then(() => Alert.alert("Plan added! Please exit"))
+      .catch((error) => Alert.alert(error.message));
   };
 
   const [weight, setWeight] = useState("");
@@ -96,6 +106,13 @@ function EditRoutine({
       style={{ backgroundColor: "#f8f8f8" }}
     >
       <View style={styles.container}>
+        {loading ? (
+          <View style={styles.loading}>
+            <ActivityIndicator color="white" size="large" />
+          </View>
+        ) : (
+          <></>
+        )}
         <View style={{ marginBottom: 25 }}>
           <Text style={[styles.label, { marginLeft: 5 }]}>Workout Name</Text>
           <InputField
@@ -199,11 +216,26 @@ function EditRoutine({
 
 export default EditRoutine;
 
+const { width, height } = Dimensions.get("screen");
+
 const styles = StyleSheet.create({
   container: {
     flex: 0.8,
     margin: 30,
     padding: 5,
+  },
+  loading: {
+    position: "absolute",
+    top: height * 0.35,
+    left: width * 0.3,
+    backgroundColor: "grey",
+    width: 100,
+    height: 100,
+    zIndex: 1,
+    opacity: 0.3,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20,
   },
   label: {
     fontSize: 20,

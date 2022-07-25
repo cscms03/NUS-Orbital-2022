@@ -88,7 +88,7 @@ function DayView({ date }) {
             strokeWidth={35}
             duration={1000}
             delay={700}
-            max={105}
+            max={bodyInfo.weight * 1.8}
           />
         </View>
       </View>
@@ -127,7 +127,7 @@ function DayView({ date }) {
             radius={90}
             strokeWidth={35}
             duration={1000}
-            max={2000}
+            max={bodyInfo.gender === "Male" ? 2700 : 2000}
           />
         </View>
       </View>

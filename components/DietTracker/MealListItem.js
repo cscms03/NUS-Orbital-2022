@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: Dimensions.get("window").width * 0.83,
-    height: 370,
+    height: 400,
     backgroundColor: "white",
     borderRadius: 15,
     backgroundColor: "#f9fbfc",
