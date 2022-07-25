@@ -6,6 +6,7 @@ import {
   Dimensions,
   Alert,
   TouchableOpacity,
+  Modal,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Animatable from "react-native-animatable";
@@ -16,9 +17,13 @@ import TextButton from "../../components/Authentication/TextButton";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { signUp } from "../../redux/features/user";
+import AddProfileInfo from "./AddProfileInfo";
+import { Ionicons } from "@expo/vector-icons";
 
 const EMAIL_REGEX =
   /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+const ios = Platform.OS === "ios";
 
 function SignUpScreen({ navigation }) {
   const {
@@ -28,15 +33,25 @@ function SignUpScreen({ navigation }) {
     watch,
   } = useForm();
 
+  const [modal, setModal] = useState(false);
+
   const dispatch = useDispatch();
   const password = watch("password");
+  const email = watch("Email");
+
   const handleGetStartedPress = () => {
-    dispatch(signUp({ email: watch("Email"), password: watch("password") }));
-    navigation.navigate("AddProfileInfo");
+    const email = watch("Email");
+    const password = watch("password");
+    // dispatch(signUp({ email, password }));
+    setModal(!modal);
   };
 
   const handleGoBackSignInPress = () => {
     navigation.navigate("SigninScreen");
+  };
+
+  const handleBackPress = () => {
+    setModal(!modal);
   };
 
   return (
@@ -94,7 +109,7 @@ function SignUpScreen({ navigation }) {
 
           <SolidButton
             onPress={handleSubmit(handleGetStartedPress)}
-            text="Start Your WorkOut!"
+            text="Set Up Profile"
             colors={["#CC0000", "#800000"]}
             alignment="flex-end"
           />
@@ -108,6 +123,23 @@ function SignUpScreen({ navigation }) {
           />
         </ScrollView>
       </Animatable.View>
+      <Modal visible={modal} presentationStyle="formSheet" animationType="fade">
+        <TouchableOpacity
+          style={{
+            paddingLeft: 20,
+            flexDirection: "row",
+            top: 35,
+            zIndex: 1,
+          }}
+          onPress={handleBackPress}
+        >
+          <Ionicons name="chevron-back" size={22} color="white" />
+          <Text style={{ color: "white", fontSize: 17, fontWeight: "600" }}>
+            Back
+          </Text>
+        </TouchableOpacity>
+        <AddProfileInfo email={email} password={password} />
+      </Modal>
     </View>
   );
 }
