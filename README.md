@@ -1,5 +1,5 @@
 # NUS-Orbital-2022
-NUS Orbital 2022 project - Mobile App Development
+### NUS Orbital 2022 project - Mobile App Development
 Workout Ethic is a comprehensive mobile application made with React Native that features functions useful to all gym-goers from dietary care to gyming routines.
 
 ## How to use
