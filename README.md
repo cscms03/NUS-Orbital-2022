@@ -4,7 +4,7 @@ Workout Ethic is a comprehensive mobile application made with React Native that 
 
 ## How to use
 ### Expo Go
-Android Users can scan the following QR Code to use the application after downloading [Expo](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en_SG&gl=US) application from Google Play Store. 
+**Android Users** can scan the following QR Code to use the application after downloading [Expo](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en_SG&gl=US) application from Google Play Store. 
 
 <p align="center">
 <img width="278" alt="Screenshot 2022-09-07 at 4 39 37 PM" src="https://user-images.githubusercontent.com/97205844/188832400-7a4d6b01-9a0b-436a-b08b-be366e00af2f.png">
