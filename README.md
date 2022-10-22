@@ -72,3 +72,8 @@ Workout Ethic is a comprehensive mobile application made with React Native that 
 <p align="center">
 <img width="389" alt="Screenshot 2022-09-06 at 1 34 14 PM" src="https://user-images.githubusercontent.com/97205844/188554658-9bc3b07d-1809-45d7-a22e-955b7cc5aa62.png">
 </p>
+
+## Tech Stack
+- React Native
+- Firebase, Cloud Firestore
+- Git, Github
